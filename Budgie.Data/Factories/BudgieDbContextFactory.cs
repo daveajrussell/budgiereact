@@ -17,9 +17,9 @@ namespace Budgie.Data.Factories
 
             var builder = new DbContextOptionsBuilder<BudgieDbContext>();
 
-            var connectionString = configuration.GetSection("AppSettings:ConnectionString").Value;
+            var connectionString = configuration.GetConnectionString("DefaultConnection");
 
-            builder.UseSqlServer(connectionString);
+            builder.UseNpgsql(connectionString);
 
             return new BudgieDbContext(builder.Options);
         }
