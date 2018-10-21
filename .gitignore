@@ -31,6 +31,7 @@ Obj/
 # Visual Studio 2015 cache/options directory
 .vs/
 /wwwroot/dist/
+.vscode
 
 # MSTest test Results
 [Tt]est[Rr]esult*/
