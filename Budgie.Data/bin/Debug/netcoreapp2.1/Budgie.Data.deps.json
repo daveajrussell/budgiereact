@@ -103,7 +103,7 @@
     "Microsoft.EntityFrameworkCore.Relational.Design/1.1.2": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-2mf02PjAx5rTU19Np6J8MK5PhTOKsAS8BXfyikLrP3ZLrC4MUsWP5iv0qGgwmg6jDmAVReXwP9Jja5LhJq+20A==",
+      "sha512": "sha512-pu2Jxndzv3slY6Ch9mdqVfL3AFhH5XzM02Rrnf9h5lKoViprYx1O+nNqT3BxmGrPkYadY9OddG2b9+sUO3Xuzw==",
       "path": "microsoft.entityframeworkcore.relational.design/1.1.2",
       "hashPath": "microsoft.entityframeworkcore.relational.design.1.1.2.nupkg.sha512"
     },
@@ -159,14 +159,14 @@
     "Npgsql/4.0.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-EqZ1S/ZMjDNCZDu9WeWxU0whqPugxSRfLXm7H16G3b2f9YLSn4p86SUgWBhuno9KJST6ssIllxryicN543OcAw==",
+      "sha512": "sha512-+8E1qI9+dPuJwNnWVKqM5Y/XIZMqyNfVrlXmvqZY9XZ8t+wnGvZKqgz/BfbOXwAurunacG7xF9jWyh7AgWOnVQ==",
       "path": "npgsql/4.0.0",
       "hashPath": "npgsql.4.0.0.nupkg.sha512"
     },
     "Npgsql.EntityFrameworkCore.PostgreSQL/2.1.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-VgZrKEsv4K1sSCeeMo2iHmRrcbEo+yFTQ0qOMXu0GTWrDpDuaW40CWnVO3IimuVNJydhtPTYd74f/+JR4oFq0A==",
+      "sha512": "sha512-VuyoXIZnJ85HErpibabzJsiY/Na9x+auBJl9Uz++q36elDRAE6llW1O2pJec+N8O1m55qc0ouxvVHGJFsxaH1A==",
       "path": "npgsql.entityframeworkcore.postgresql/2.1.0",
       "hashPath": "npgsql.entityframeworkcore.postgresql.2.1.0.nupkg.sha512"
     },

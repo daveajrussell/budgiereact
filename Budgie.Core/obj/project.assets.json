@@ -6249,7 +6249,7 @@
       ]
     },
     "Microsoft.AspNetCore.Razor.Design/2.1.2": {
-      "sha512": "ab4+TZw3Sxqrr5TwrwVyABeQkhSxYMJXgG6yZw7T+r6Vz+hcOt+pK79o15ESG7kZvWAK9wRG7emnTIia5O6R1Q==",
+      "sha512": "sa/cztXesLyTgCiYuef0RK2EAImnak0w2wrjCh/YBTvbn4iV2eTy0q3F8CyUkGiaYEyxUKGVTko6+7SMRBL4Gg==",
       "type": "package",
       "path": "microsoft.aspnetcore.razor.design/2.1.2",
       "files": [
@@ -8825,10 +8825,11 @@
       ]
     },
     "StackExchange.Redis.StrongName/1.2.6": {
-      "sha512": "UFmT1/JYu1PLiRwkyvEPVHk/tVTJa8Ka2rb9yzidzDoQARvhBVRpaWUeaP81373v54jupDBvAoGHGl0EY/HphQ==",
+      "sha512": "gIXD2xaDra46atvl1pR199FWFqAWa61hVDURrRfv2/QnxXSOpQbAVXWtSQkRQTT4Pqit6v+3OSnyHSd+RfA4Gg==",
       "type": "package",
       "path": "stackexchange.redis.strongname/1.2.6",
       "files": [
+        ".signature.p7s",
         "lib/net45/StackExchange.Redis.StrongName.dll",
         "lib/net45/StackExchange.Redis.StrongName.xml",
         "lib/net46/StackExchange.Redis.StrongName.dll",
@@ -13571,28 +13572,31 @@
     ]
   },
   "packageFolders": {
-    "/Users/daverussell/.nuget/packages/": {},
-    "/usr/local/share/dotnet/sdk/NuGetFallbackFolder": {}
+    "C:\\Users\\davea\\.nuget\\packages\\": {},
+    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/daverussell/Work/BudgieReact/Budgie.Core/Budgie.Core.csproj",
+      "projectUniqueName": "C:\\Work\\budgiereact\\Budgie.Core\\Budgie.Core.csproj",
       "projectName": "Budgie.Core",
-      "projectPath": "/Users/daverussell/Work/BudgieReact/Budgie.Core/Budgie.Core.csproj",
-      "packagesPath": "/Users/daverussell/.nuget/packages/",
-      "outputPath": "/Users/daverussell/Work/BudgieReact/Budgie.Core/obj/",
+      "projectPath": "C:\\Work\\budgiereact\\Budgie.Core\\Budgie.Core.csproj",
+      "packagesPath": "C:\\Users\\davea\\.nuget\\packages\\",
+      "outputPath": "C:\\Work\\budgiereact\\Budgie.Core\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "/usr/local/share/dotnet/sdk/NuGetFallbackFolder"
+        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "/Users/daverussell/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\davea\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\ServiceFabricSDK.config"
       ],
       "originalTargetFrameworks": [
         "netcoreapp2.1"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {

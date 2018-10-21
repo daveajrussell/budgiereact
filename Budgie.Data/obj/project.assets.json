@@ -6323,7 +6323,7 @@
       ]
     },
     "Microsoft.AspNetCore.Razor.Design/2.1.2": {
-      "sha512": "ab4+TZw3Sxqrr5TwrwVyABeQkhSxYMJXgG6yZw7T+r6Vz+hcOt+pK79o15ESG7kZvWAK9wRG7emnTIia5O6R1Q==",
+      "sha512": "sa/cztXesLyTgCiYuef0RK2EAImnak0w2wrjCh/YBTvbn4iV2eTy0q3F8CyUkGiaYEyxUKGVTko6+7SMRBL4Gg==",
       "type": "package",
       "path": "microsoft.aspnetcore.razor.design/2.1.2",
       "files": [
@@ -7093,11 +7093,10 @@
       ]
     },
     "Microsoft.EntityFrameworkCore.Relational.Design/1.1.2": {
-      "sha512": "2mf02PjAx5rTU19Np6J8MK5PhTOKsAS8BXfyikLrP3ZLrC4MUsWP5iv0qGgwmg6jDmAVReXwP9Jja5LhJq+20A==",
+      "sha512": "pu2Jxndzv3slY6Ch9mdqVfL3AFhH5XzM02Rrnf9h5lKoViprYx1O+nNqT3BxmGrPkYadY9OddG2b9+sUO3Xuzw==",
       "type": "package",
       "path": "microsoft.entityframeworkcore.relational.design/1.1.2",
       "files": [
-        ".signature.p7s",
         "lib/net451/Microsoft.EntityFrameworkCore.Relational.Design.dll",
         "lib/net451/Microsoft.EntityFrameworkCore.Relational.Design.xml",
         "lib/netstandard1.3/Microsoft.EntityFrameworkCore.Relational.Design.dll",
@@ -8504,11 +8503,10 @@
       ]
     },
     "Npgsql/4.0.0": {
-      "sha512": "EqZ1S/ZMjDNCZDu9WeWxU0whqPugxSRfLXm7H16G3b2f9YLSn4p86SUgWBhuno9KJST6ssIllxryicN543OcAw==",
+      "sha512": "+8E1qI9+dPuJwNnWVKqM5Y/XIZMqyNfVrlXmvqZY9XZ8t+wnGvZKqgz/BfbOXwAurunacG7xF9jWyh7AgWOnVQ==",
       "type": "package",
       "path": "npgsql/4.0.0",
       "files": [
-        ".signature.p7s",
         "lib/net45/Npgsql.dll",
         "lib/net45/Npgsql.pdb",
         "lib/net45/Npgsql.xml",
@@ -8523,11 +8521,10 @@
       ]
     },
     "Npgsql.EntityFrameworkCore.PostgreSQL/2.1.0": {
-      "sha512": "VgZrKEsv4K1sSCeeMo2iHmRrcbEo+yFTQ0qOMXu0GTWrDpDuaW40CWnVO3IimuVNJydhtPTYd74f/+JR4oFq0A==",
+      "sha512": "VuyoXIZnJ85HErpibabzJsiY/Na9x+auBJl9Uz++q36elDRAE6llW1O2pJec+N8O1m55qc0ouxvVHGJFsxaH1A==",
       "type": "package",
       "path": "npgsql.entityframeworkcore.postgresql/2.1.0",
       "files": [
-        ".signature.p7s",
         "lib/netstandard2.0/Npgsql.EntityFrameworkCore.PostgreSQL.dll",
         "lib/netstandard2.0/Npgsql.EntityFrameworkCore.PostgreSQL.pdb",
         "npgsql.entityframeworkcore.postgresql.2.1.0.nupkg.sha512",
@@ -8955,10 +8952,11 @@
       ]
     },
     "StackExchange.Redis.StrongName/1.2.6": {
-      "sha512": "UFmT1/JYu1PLiRwkyvEPVHk/tVTJa8Ka2rb9yzidzDoQARvhBVRpaWUeaP81373v54jupDBvAoGHGl0EY/HphQ==",
+      "sha512": "gIXD2xaDra46atvl1pR199FWFqAWa61hVDURrRfv2/QnxXSOpQbAVXWtSQkRQTT4Pqit6v+3OSnyHSd+RfA4Gg==",
       "type": "package",
       "path": "stackexchange.redis.strongname/1.2.6",
       "files": [
+        ".signature.p7s",
         "lib/net45/StackExchange.Redis.StrongName.dll",
         "lib/net45/StackExchange.Redis.StrongName.xml",
         "lib/net46/StackExchange.Redis.StrongName.dll",
@@ -13709,35 +13707,38 @@
     ]
   },
   "packageFolders": {
-    "/Users/daverussell/.nuget/packages/": {},
-    "/usr/local/share/dotnet/sdk/NuGetFallbackFolder": {}
+    "C:\\Users\\davea\\.nuget\\packages\\": {},
+    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/daverussell/Work/BudgieReact/Budgie.Data/Budgie.Data.csproj",
+      "projectUniqueName": "C:\\Work\\budgiereact\\Budgie.Data\\Budgie.Data.csproj",
       "projectName": "Budgie.Data",
-      "projectPath": "/Users/daverussell/Work/BudgieReact/Budgie.Data/Budgie.Data.csproj",
-      "packagesPath": "/Users/daverussell/.nuget/packages/",
-      "outputPath": "/Users/daverussell/Work/BudgieReact/Budgie.Data/obj/",
+      "projectPath": "C:\\Work\\budgiereact\\Budgie.Data\\Budgie.Data.csproj",
+      "packagesPath": "C:\\Users\\davea\\.nuget\\packages\\",
+      "outputPath": "C:\\Work\\budgiereact\\Budgie.Data\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "/usr/local/share/dotnet/sdk/NuGetFallbackFolder"
+        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "/Users/daverussell/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\davea\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\ServiceFabricSDK.config"
       ],
       "originalTargetFrameworks": [
         "netcoreapp2.1"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "netcoreapp2.1": {
           "projectReferences": {
-            "/Users/daverussell/Work/BudgieReact/Budgie.Core/Budgie.Core.csproj": {
-              "projectPath": "/Users/daverussell/Work/BudgieReact/Budgie.Core/Budgie.Core.csproj"
+            "C:\\Work\\budgiereact\\Budgie.Core\\Budgie.Core.csproj": {
+              "projectPath": "C:\\Work\\budgiereact\\Budgie.Core\\Budgie.Core.csproj"
             }
           }
         }
