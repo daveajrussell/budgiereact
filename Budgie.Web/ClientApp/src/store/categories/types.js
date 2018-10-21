@@ -1,0 +1,10 @@
+export const requestAllCategoriesType = 'REQUEST_ALL_CATEGORIES';
+export const receiveAllCategoriesType = 'RECEIVE_ALL_CATEGORIES';
+export const allCategoriesFailureType = 'ALL_CATEGORIES_FAILURE';
+export const requestNewCategoryType = 'REQUEST_NEW_CATEGORY';
+export const receiveNewCategoryType = 'RECEIVE_NEW_CATEGORY';
+export const newCategoryFailureType = 'NEW_CATEGORY_FAILURE';
+export const requestDeleteCategoryType = 'REQUEST_DELETE_CATEGORY';
+export const receiveDeleteCategoryType = 'RECEIVE_DELETE_CATEGORY';
+export const requestEditCategoryType = 'REQUEST_EDIT_CATEGORY';
+export const receiveEditCategoryType = 'RECEIVE_EDIT_CATEGORY';
