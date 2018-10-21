@@ -65,7 +65,7 @@ class Login extends Component {
                                 <p>
                                     Some sort of interesting text.
                                 </p>
-                                <form name="form" onSubmit={this.handleSubmit} noValidate="true">
+                                <form name="form" onSubmit={this.handleSubmit} noValidate={true}>
 
                                     <div className="field">
                                         <div className="control">

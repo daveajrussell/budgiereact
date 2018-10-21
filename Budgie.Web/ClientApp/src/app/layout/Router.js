@@ -6,6 +6,7 @@ import Home from "./../Home";
 import Login from './../Login';
 import Register from './../Register';
 import Categories from './../Categories';
+import Budgets from './../Budgets';
 
 export default () => (
   <Switch>
@@ -13,5 +14,6 @@ export default () => (
     <Route exact path="/login" component={Login} />
     <Route exact path="/register" component={Register} />
     <PrivateRoute exact path="/categories" component={Categories} />
+    <PrivateRoute path="/budgets/:month?/:year?" component={Budgets} />
   </Switch>
 );

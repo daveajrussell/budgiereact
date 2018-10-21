@@ -44,6 +44,11 @@ function renderAppActions(props) {
           to="/categories">
           <span>Categories</span>
         </Link>
+        <Link
+          className="navbar-item"
+          to="/budgets">
+          <span>Budgets</span>
+        </Link>
       </div>
     );
   }

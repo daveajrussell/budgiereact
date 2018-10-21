@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.AspNetCore.Rewrite;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -115,10 +116,11 @@ namespace Budgie.Web
             else
             {
                 app.UseExceptionHandler("/Error");
-                app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            var options = new RewriteOptions().AddRedirectToHttps();
+            app.UseRewriter(options);
+            app.UseHsts();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
             app.UseAuthentication();
