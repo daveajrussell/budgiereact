@@ -44,6 +44,68 @@ namespace Budgie.Web
 
         public IConfiguration Configuration { get; }
 
+        public void ConfigureDevelopmentServices(IServiceCollection services)
+        {
+            services.AddMvc()
+                    .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+                    .AddJsonOptions(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
+            services.AddAutoMapper();
+
+            var appSettingsSection = Configuration.GetSection("AppSettings");
+            services.Configure<AppSettings>(appSettingsSection);
+
+            var policy = new AuthorizationPolicyBuilder()
+                .RequireAuthenticatedUser()
+                .Build();
+
+            services.Configure<MvcOptions>(options =>
+            {
+                options.Filters.Add(new RequireHttpsAttribute());
+                options.Filters.Add(new AuthorizeFilter(policy));
+            });
+
+            services.AddDbContext<BudgieDbContext>(options => options.UseInMemoryDatabase("budgie"));
+
+            services.AddIdentity<User, Role>()
+                .AddEntityFrameworkStores<BudgieDbContext>()
+                .AddDefaultTokenProviders();
+
+            var appSettings = appSettingsSection.Get<AppSettings>();
+            var key = Encoding.ASCII.GetBytes(appSettings.Secret);
+
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(x =>
+            {
+                x.ClaimsIssuer = "budgie.com";
+                x.SaveToken = true;
+                x.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = "budgie.com",
+                    ValidAudience = "budgie.com",
+                    IssuerSigningKey = new SymmetricSecurityKey(key)
+                };
+            });
+
+            services.AddSingleton<IAppSettings>(appSettings);
+            services.AddDataLayer();
+            services.AddTransient<ITokenResolverMiddleware, TokenResolverMiddleware>();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+            services.AddSpaStaticFiles(configuration =>
+            {
+                configuration.RootPath = "ClientApp/build";
+            });
+        }
+
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc()

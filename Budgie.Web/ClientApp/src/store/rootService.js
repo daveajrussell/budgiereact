@@ -23,6 +23,5 @@ export function handleResponse(response) {
 }
 
 export function handleError(error) {
-    debugger;
     return Promise.reject(error && error.message);
 }
