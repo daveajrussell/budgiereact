@@ -65,7 +65,10 @@ namespace Budgie.Web
                 options.Filters.Add(new AuthorizeFilter(policy));
             });
 
-            services.AddDbContext<BudgieDbContext>(options => options.UseInMemoryDatabase("budgie"));
+            // services.AddDbContext<BudgieDbContext>(options => options.UseInMemoryDatabase("budgie"));
+
+            services.AddDbContext<BudgieDbContext>(options =>
+                options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddIdentity<User, Role>()
                 .AddEntityFrameworkStores<BudgieDbContext>()

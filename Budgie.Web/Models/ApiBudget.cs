@@ -34,4 +34,7 @@ public class ApiBudget
 
     [DataMember]
     public IEnumerable<ApiTransaction> Transactions { get; set; }
+
+    [DataMember]
+    public IEnumerable<ApiCategory> Categories { get; set; }
 }

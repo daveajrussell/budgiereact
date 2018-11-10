@@ -56,71 +56,56 @@ class Login extends Component {
         const { loggingIn, message, loginSuccess } = this.props.authentication;
         const { username, password, submitted, valid } = this.state;
         return (
-            <section className="section">
-                <div className="container">
-                    <div className="columns">
-                        <div className="column is-3 is-offset-4">
-                            <div className="content">
-                                <h2>Login</h2>
-                                <p>
-                                    Some sort of interesting text.
-                                </p>
-                                <form name="form" onSubmit={this.handleSubmit} noValidate={true}>
-
-                                    <div className="field">
-                                        <div className="control">
-                                            <input className={submitted && !username ? 'input is-danger' : 'input'}
-                                                type="email"
-                                                placeholder="Email"
-                                                name="username"
-                                                value={username}
-                                                onChange={this.handleChange} />
-                                        </div>
-                                        {
-                                            submitted && !username &&
-                                            <p className="help is-danger">
-                                                This field is required
-                                            </p>
-                                        }
-                                    </div>
-
-                                    <div className="field">
-                                        <div className="control">
-                                            <input className={submitted && !password ? 'input is-danger' : 'input'}
-                                                type="password"
-                                                placeholder="Password"
-                                                name="password"
-                                                value={password}
-                                                onChange={this.handleChange} />
-                                        </div>
-                                        {
-                                            submitted && !password &&
-                                            <p className="help is-danger">
-                                                This field is required
-                                            </p>
-                                        }
-                                        {
-                                            submitted && valid && !loggingIn && !loginSuccess &&
-                                            <p className="help is-danger">
-                                                {message ? message : 'Please check your username & password'}
-                                            </p>
-                                        }
-                                    </div>
-
-                                    <div className="field is-grouped">
-                                        <p className="control">
-                                            <ButtonSpinner text="Login" loading={loggingIn} buttonClass={(submitted && !valid) || submitted && valid && !loggingIn && !loginSuccess ? 'is-danger' : 'is-primary'} />
-                                        </p>
-                                        <p>
-                                            <Link to="/register" className="button">Register</Link>
-                                        </p>
-                                    </div>
-                                </form>
-                            </div>
+            <main className="column is-3 is-offset-4">
+                <h2>Login</h2>
+                <p>Some sort of interesting text.</p>
+                <form name="form" onSubmit={this.handleSubmit} noValidate={true}>
+                    <div className="field">
+                        <div className="control">
+                            <input className={submitted && !username ? 'input is-danger' : 'input'}
+                                type="email"
+                                placeholder="Email"
+                                name="username"
+                                value={username}
+                                onChange={this.handleChange} />
                         </div>
+                        {
+                            submitted && !username &&
+                            <p className="help is-danger">This field is required</p>
+                        }
                     </div>
-                </div>
-            </section>
+                    <div className="field">
+                        <div className="control">
+                            <input className={submitted && !password ? 'input is-danger' : 'input'}
+                                type="password"
+                                placeholder="Password"
+                                name="password"
+                                value={password}
+                                onChange={this.handleChange} />
+                        </div>
+                        {
+                            submitted && !password &&
+                            <p className="help is-danger">
+                                This field is required
+                                            </p>
+                        }
+                        {
+                            submitted && valid && !loggingIn && !loginSuccess &&
+                            <p className="help is-danger">
+                                {message ? message : 'Please check your username & password'}
+                            </p>
+                        }
+                    </div>
+                    <div className="field is-grouped">
+                        <p className="control">
+                            <ButtonSpinner text="Login" loading={loggingIn} buttonClass={(submitted && !valid) || submitted && valid && !loggingIn && !loginSuccess ? 'is-danger' : 'is-primary'} />
+                        </p>
+                        <p>
+                            <Link to="/register" className="button">Register</Link>
+                        </p>
+                    </div>
+                </form>
+            </main>
         );
     }
 }

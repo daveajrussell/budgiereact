@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { actionCreators } from './../store/categories/actions';
-import { Modal } from './components/Modal';
+import { Modal } from './components';
 
 const types = {
     1: 'Income',
@@ -115,61 +115,53 @@ class Categories extends Component {
         const { mode, id, type, name, valid, submitted } = this.state;
         return (
             <main>
-                <section className="section">
-                    <div className="container">
-                        <div className="columns">
-                            <div className="column is-8-desktop is-offset-2-desktop">
-                                <div className="content">
-                                    <h3>Categories</h3>
-                                    {
-                                        loading ?
-                                            <main>
-                                                <div>Loading...</div>
-                                            </main>
-                                            :
-                                            <main>
-                                                <a className="button is-primary is-pulled-right" onClick={() => this.showModal()}>New</a>
-                                                {
-                                                    items && items.length >= 1 ?
-                                                        <table className="table">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th>Name</th>
-                                                                    <th>Type</th>
-                                                                    <th></th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                {items.map((item) =>
-                                                                    <tr key={item.id}>
-                                                                        <td>{item.name}</td>
-                                                                        <td>{types[item.type]}</td>
-                                                                        <td>
-                                                                            <div className="field is-grouped is-pulled-right">
-                                                                                <p className="control">
-                                                                                    <button className={'button is-small is-primary ' + (item.editing ? 'is-loading' : '')}
-                                                                                        onClick={() => !item.editing && this.showModal(item)}>Edit</button>
-                                                                                </p>
-                                                                                <p className="control">
-                                                                                    <button className={'button is-small is-danger ' + (item.deleting ? 'is-loading' : '')}
-                                                                                        onClick={() => !item.deleting && this.handleDelete(item)}>Delete</button>
-                                                                                </p>
-                                                                            </div>
-                                                                        </td>
-                                                                    </tr>
-                                                                )}
-                                                            </tbody>
-                                                        </table>
-                                                        :
-                                                        <div>No categories</div>
-                                                }
-                                            </main>
-                                    }
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
+                <h3>
+                    Categories
+                    <a className="button is-small is-primary is-pulled-right" onClick={() => this.showModal()}>New</a>
+                </h3>
+                {
+                    loading ?
+                        <main>
+                            <div>Loading...</div>
+                        </main>
+                        :
+                        <main>
+                            {
+                                items && items.length >= 1 ?
+                                    <table className="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Type</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {items.map((item) =>
+                                                <tr key={item.id}>
+                                                    <td>{item.name}</td>
+                                                    <td>{types[item.type]}</td>
+                                                    <td>
+                                                        <div className="field is-grouped is-pulled-right">
+                                                            <p className="control">
+                                                                <button className={'button is-small is-primary ' + (item.editing ? 'is-loading' : '')}
+                                                                    onClick={() => !item.editing && this.showModal(item)}>Edit</button>
+                                                            </p>
+                                                            <p className="control">
+                                                                <button className={'button is-small is-danger ' + (item.deleting ? 'is-loading' : '')}
+                                                                    onClick={() => !item.deleting && this.handleDelete(item)}>Delete</button>
+                                                            </p>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            )}
+                                        </tbody>
+                                    </table>
+                                    :
+                                    <div>No categories</div>
+                            }
+                        </main>
+                }
                 <Modal buttonClass={submitted && !valid ? 'is-danger' : 'is-primary'}
                     show={this.isModalShown()}
                     loading={loading}

@@ -31,6 +31,11 @@ namespace Budgie.Api.Controllers
         {
             var budget = await _uow.Budgets.GetBudget(year, month);
 
+            var categories = _uow.Categories
+                    .GetAll()
+                    .Where(x => x.UserId == Token.UserId)
+                    .ToList();
+
             if (budget == null)
             {
                 budget = new Budget
@@ -40,11 +45,6 @@ namespace Budgie.Api.Controllers
                     Month = month,
                     DateAdded = DateTime.UtcNow
                 };
-
-                var categories = _uow.Categories
-                    .GetAll()
-                    .Where(x => x.UserId == Token.UserId)
-                    .ToList();
 
                 var incomes = categories
                     .Where(x => x.Type == CategoryType.Income)
@@ -107,13 +107,16 @@ namespace Budgie.Api.Controllers
                 await _uow.CommitAsync();
             }
 
-            var model = _mapper.Map<Budget, ApiBudget>(budget);
+            var apiBudget = _mapper.Map<Budget, ApiBudget>(budget);
+            var apiCategories = _mapper.Map<IEnumerable<Category>, IEnumerable<ApiCategory>>(categories);
 
-            return new JsonResult(model);
+            apiBudget.Categories = apiCategories;
+
+            return new JsonResult(apiBudget);
         }
 
-        [HttpPut]
-        [Route("add")]
+        [HttpPost]
+        [Route("transaction")]
         public async Task<IActionResult> AddTransaction([FromBody] ApiTransaction model)
         {
             var budget = await _uow.Budgets.GetByIdAsync(model.BudgetId);
@@ -142,9 +145,9 @@ namespace Budgie.Api.Controllers
             return new JsonResult(model);
         }
 
-        [HttpPatch]
-        [Route("edit")]
-        public async Task<IActionResult> EditTransaction([FromBody] ApiTransaction model)
+        [HttpPut]
+        [Route("transaction/{id:int}")]
+        public async Task<IActionResult> EditTransaction(int id, [FromBody] ApiTransaction model)
         {
             var transaction = await _uow.Transactions.GetByIdAsync(model.Id);
             var category = await _uow.Categories.GetByIdAsync(model.Category.Id);
@@ -171,26 +174,13 @@ namespace Budgie.Api.Controllers
             return new NotFoundResult();
         }
 
-        [HttpPatch]
-        [Route("outgoing/{id:int}/edit")]
-        public async Task<IActionResult> EditOutgoing(int id, [FromBody] ApiOutgoing model)
+        [HttpDelete]
+        [Route("transaction/{id:int}")]
+        public async Task DeleteTransaction(int id, [FromBody] ApiTransaction model)
         {
-            var outgoing = _uow.Outgoings.GetAll()
-                .Where(x => x.UserId == Token.UserId)
-                .Where(x => x.Id == id)
-                .FirstOrDefault();
-
-            if (outgoing != null)
-            {
-                outgoing.DateModified = DateTime.UtcNow;
-                outgoing.Budgeted = model.Budgeted;
-                _uow.Outgoings.Update(outgoing);
-                await _uow.CommitAsync();
-
-                return new OkResult();
-            }
-
-            return new NotFoundResult();
+            UpdateTransaction(model);
+            _uow.Transactions.Delete(id);
+            await _uow.CommitAsync();
         }
 
         private void UpdateTransaction(ApiTransaction model)
@@ -244,15 +234,6 @@ namespace Budgie.Api.Controllers
                     _uow.Savings.Update(saving);
                 }
             }
-        }
-
-        [HttpDelete]
-        [Route("{id:int}")]
-        public async Task DeleteTransaction(int id, [FromBody] ApiTransaction model)
-        {
-            UpdateTransaction(model);
-            _uow.Transactions.Delete(id);
-            await _uow.CommitAsync();
         }
     }
 }

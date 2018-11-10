@@ -13,5 +13,44 @@ export const actionCreators = {
             .catch((error) => {
                 dispatch({ type: types.budgetFailureType });
             });
+    },
+
+    addTransaction: (transaction) => (dispatch) => {
+        dispatch({ type: types.requestNewTransactionType });
+
+        budgetService
+            .addTransaction(transaction)
+            .then((transaction) => {
+                dispatch({ type: types.receiveNewTransactionType, transaction: transaction });
+            })
+            .catch((error) => {
+                dispatch({ type: types.transactionFailureType });
+            });
+    },
+
+    editTransaction: (transaction) => (dispatch) => {
+        dispatch({ type: types.requestEditTransactionType });
+
+        budgetService
+            .editTransaction(transaction)
+            .then((transaction) => {
+                dispatch({ type: types.receiveEditTransactionType, transaction: transaction });
+            })
+            .catch((error) => {
+                dispatch({ type: types.transactionFailureType });
+            });
+    },
+
+    deleteTransaction: (transaction) => (dispatch) => {
+        dispatch({ type: types.requestDeleteTransactionType });
+
+        budgetService
+            .deleteTransaction(transaction)
+            .then((transaction) => {
+                dispatch({ type: types.receiveDeleteTransactionType, transaction: transaction });
+            })
+            .catch((error) => {
+                dispatch({ type: types.transactionFailureType });
+            });
     }
 };

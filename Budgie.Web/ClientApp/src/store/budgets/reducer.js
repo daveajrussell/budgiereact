@@ -19,5 +19,57 @@ export default function reducer(state, action) {
         }
     }
 
+    if (action.type === types.requestNewTransactionType) {
+        return {
+            ...state,
+            loading: true
+        }
+    }
+
+    if (action.type === types.receiveBudgetType) {
+        return {
+            ...state,
+            transaction: action.transaction,
+            loading: false
+        }
+    }
+
+    if (action.type === types.requestEditTransactionType) {
+        return {
+            ...state,
+            loading: true
+        }
+    }
+
+    if (action.type === types.receiveEditTransactionType) {
+        return {
+            ...state,
+            transaction: action.transaction,
+            loading: false
+        }
+    }
+
+    if (action.type === types.requestDeleteTransactionType) {
+        return {
+            ...state,
+            loading: true
+        }
+    }
+
+    if (action.type === types.receiveDeleteTransactionType) {
+        return {
+            ...state,
+            transaction: action.transaction,
+            loading: false
+        }
+    }
+
+    if (action.type === types.transactionFailureType) {
+        return {
+            ...state,
+            loading: false
+        }
+    }
+
     return state;
 };
