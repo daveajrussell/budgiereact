@@ -46,21 +46,8 @@ namespace Budgie.Api.Controllers
                     DateAdded = DateTime.UtcNow
                 };
 
-                var incomes = categories
-                    .Where(x => x.Type == CategoryType.Income)
-                    .Select(x => new Income
-                    {
-                        BudgetId = budget.Id,
-                        UserId = Token.UserId,
-                        DateAdded = DateTime.UtcNow,
-                        CategoryId = x.Id
-                    })
-                    .ToList();
-
-                await _uow.Incomes.AddRangeAsync(incomes);
-
                 var outgoings = categories
-                    .Where(x => x.Type == CategoryType.Dedicated || x.Type == CategoryType.Variable)
+                    .Where(x => x.Type == CategoryType.Outgoing)
                     .Select(x => new Outgoing
                     {
                         BudgetId = budget.Id,
@@ -72,22 +59,7 @@ namespace Budgie.Api.Controllers
 
                 await _uow.Outgoings.AddRangeAsync(outgoings);
 
-                var savings = categories
-                    .Where(x => x.Type == CategoryType.Savings)
-                    .Select(x => new Saving
-                    {
-                        BudgetId = budget.Id,
-                        UserId = Token.UserId,
-                        DateAdded = DateTime.UtcNow,
-                        CategoryId = x.Id
-                    })
-                    .ToList();
-
-                await _uow.Savings.AddRangeAsync(savings);
-
-                budget.Incomes = incomes;
                 budget.Outgoings = outgoings;
-                budget.Savings = savings;
 
                 var transactions = categories
                     .Select(x => new Transaction
@@ -104,6 +76,29 @@ namespace Budgie.Api.Controllers
 
                 await _uow.Transactions.AddRangeAsync(transactions);
                 await _uow.Budgets.AddAsync(budget);
+                await _uow.CommitAsync();
+            }
+
+            var outgoingCatIds = budget.Outgoings.Select(x => x.CategoryId).ToArray();
+            var catIds = categories.Where(x => x.Type == CategoryType.Outgoing).Select(x => x.Id).ToArray();
+
+            var missingKeys = catIds.Where(x => !outgoingCatIds.Contains(x)).Select(x => x);
+
+            if (missingKeys.Any())
+            {
+                var outgoings = categories
+                    .Where(x => missingKeys.Contains(x.Id))
+                    .Select(x => new Outgoing
+                    {
+                        BudgetId = budget.Id,
+                        UserId = Token.UserId,
+                        DateAdded = DateTime.UtcNow,
+                        CategoryId = x.Id
+                    })
+                    .ToList();
+
+                await _uow.Outgoings.AddRangeAsync(outgoings);
+                budget.Outgoings.Concat(outgoings);
                 await _uow.CommitAsync();
             }
 
@@ -136,7 +131,7 @@ namespace Budgie.Api.Controllers
 
             await _uow.Transactions.AddAsync(transaction);
 
-            UpdateTransaction(model);
+            UpdateTransaction(model, category);
 
             await _uow.CommitAsync();
 
@@ -163,7 +158,7 @@ namespace Budgie.Api.Controllers
 
                 _uow.Transactions.Update(transaction);
 
-                UpdateTransaction(model);
+                UpdateTransaction(model, category);
 
                 await _uow.CommitAsync();
 
@@ -178,30 +173,13 @@ namespace Budgie.Api.Controllers
         [Route("transaction/{id:int}")]
         public async Task DeleteTransaction(int id, [FromBody] ApiTransaction model)
         {
-            UpdateTransaction(model);
             _uow.Transactions.Delete(id);
             await _uow.CommitAsync();
         }
 
-        private void UpdateTransaction(ApiTransaction model)
+        private void UpdateTransaction(ApiTransaction model, Category category)
         {
-            if (model.Category.Type == CategoryType.Income)
-            {
-                var income = _uow.Incomes.GetAll()
-                    .Where(x => x.BudgetId == model.BudgetId)
-                    .Where(x => x.CategoryId == model.Category.Id)
-                    .FirstOrDefault();
-
-                if (income != null)
-                {
-                    income.Resolved = model.Resolved;
-                    income.DateModified = DateTime.UtcNow;
-                    income.Total = model.Amount;
-
-                    _uow.Incomes.Update(income);
-                }
-            }
-            else if (model.Category.Type == CategoryType.Dedicated || model.Category.Type == CategoryType.Variable)
+            if (category.Type == CategoryType.Outgoing)
             {
                 var outgoing = _uow.Outgoings.GetAll()
                     .Where(x => x.BudgetId == model.BudgetId)
@@ -211,27 +189,10 @@ namespace Budgie.Api.Controllers
                 if (outgoing != null)
                 {
                     outgoing.DateModified = DateTime.UtcNow;
-                    outgoing.Resolved = model.Resolved;
                     outgoing.Actual += model.Amount;
                     outgoing.Remaining = outgoing.Remaining - model.Amount;
 
                     _uow.Outgoings.Update(outgoing);
-                }
-            }
-            else if (model.Category.Type == CategoryType.Savings)
-            {
-                var saving = _uow.Savings.GetAll()
-                    .Where(x => x.BudgetId == model.BudgetId)
-                    .Where(x => x.CategoryId == model.Category.Id)
-                    .FirstOrDefault();
-
-                if (saving != null)
-                {
-                    saving.DateModified = DateTime.UtcNow;
-                    saving.Resolved = model.Resolved;
-                    saving.Total = model.Amount;
-
-                    _uow.Savings.Update(saving);
                 }
             }
         }

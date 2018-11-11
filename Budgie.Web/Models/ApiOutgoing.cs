@@ -9,9 +9,6 @@ public class ApiOutgoing
     public int Id { get; set; }
 
     [DataMember]
-    public DateTime Date { get; set; }
-
-    [DataMember]
     public bool Resolved { get; set; }
 
     [DataMember]
@@ -25,7 +22,4 @@ public class ApiOutgoing
 
     [DataMember]
     public ApiCategory Category { get; set; }
-
-    [DataMember]
-    public ApiBudget Budget { get; set; }
 }

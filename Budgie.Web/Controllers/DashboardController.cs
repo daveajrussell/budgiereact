@@ -48,15 +48,7 @@ namespace Budgie.Api.Controllers
                 default:
                     from = now.AddDays(-7);
                     break;
-            }
-
-            _uow.Outgoings
-                .GetAll()
-                .Where(x => x.UserId == Token.UserId)
-                .Where(x => x.Date >= from)
-                .Where(x => x.Date <= now)
-                .Where(x => x.Category.Type == CategoryType.Variable)
-                .ToList();
+            }   
 
             return null;
         }

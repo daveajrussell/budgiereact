@@ -14,6 +14,6 @@ export default () => (
     <Route exact path="/login" component={Login} />
     <Route exact path="/register" component={Register} />
     <PrivateRoute exact path="/categories" component={Categories} />
-    <PrivateRoute path="/budgets/:month?/:year?" component={Budgets} />
+    <PrivateRoute exact path="/budgets" component={Budgets} />
   </Switch>
 );

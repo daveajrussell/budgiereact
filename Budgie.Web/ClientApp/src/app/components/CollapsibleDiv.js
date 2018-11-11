@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAngleUp, faAngleDown } from '@fortawesome/free-solid-svg-icons'
 
-export class CollapsibleTable extends Component {
+export class CollapsibleDiv extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isCollapsed: true
+            isCollapsed: false
         }
     }
 
@@ -15,7 +15,6 @@ export class CollapsibleTable extends Component {
     }
 
     render() {
-        const tableClassName = "table is-striped";
         const { isCollapsed } = this.state;
         const { title, children } = this.props;
         return (
@@ -26,9 +25,9 @@ export class CollapsibleTable extends Component {
                         <FontAwesomeIcon icon={isCollapsed ? faAngleUp : faAngleDown} pull="right" />
                     </h4>
                 </a>
-                <table className={isCollapsed ? `${tableClassName} is-hidden` : tableClassName}>
+                <div className={isCollapsed ? 'is-hidden' : ''}>
                     {children}
-                </table>
+                </div>
             </main >
         );
     }

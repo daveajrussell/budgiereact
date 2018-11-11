@@ -81,7 +81,7 @@ class Register extends Component {
 		const { registering, message } = this.props.authentication;
 		const { user, submitted, validPassword, validEmail } = this.state;
 		return (
-			<main className="column is-3 is-offset-4">
+			<main className="column is-4-desktop is-6-tablet is-offset-3-tablet is-offset-4-desktop">
 				<h2>Register</h2>
 				<p>Some sort of interesting text.</p>
 				<form name="form" onSubmit={this.handleSubmit} noValidate={true}>

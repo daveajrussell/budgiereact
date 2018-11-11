@@ -26,10 +26,20 @@ export default function reducer(state, action) {
         }
     }
 
-    if (action.type === types.receiveBudgetType) {
+    if (action.type === types.receiveNewTransactionType) {
+        state.budget.transactions.push(action.transaction);
+        state.budget.outgoings.map((item) => {
+            if (item.category.id !== action.transaction.category.id) {
+                return item;
+            }
+
+            item.actual += action.transaction.amount;
+            item.remaining = item.budgeted - item.actual;
+            return item;
+        });
+
         return {
             ...state,
-            transaction: action.transaction,
             loading: false
         }
     }

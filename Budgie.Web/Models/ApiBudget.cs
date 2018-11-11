@@ -18,19 +18,7 @@ public class ApiBudget
     public decimal TotalBudgeted { get; set; }
 
     [DataMember]
-    public decimal TotalSaved { get; set; }
-
-    [DataMember]
-    public decimal IncomeVsExpenditure { get; set; }
-
-    [DataMember]
-    public IEnumerable<ApiIncome> Incomes { get; set; }
-
-    [DataMember]
     public IEnumerable<ApiOutgoing> Outgoings { get; set; }
-
-    [DataMember]
-    public IEnumerable<ApiSaving> Savings { get; set; }
 
     [DataMember]
     public IEnumerable<ApiTransaction> Transactions { get; set; }

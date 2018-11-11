@@ -1,147 +1,113 @@
 import React, { Component } from "react";
-import { Modal, CollapsibleTable } from './components';
+import { Modal, CollapsibleDiv } from './components';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { actionCreators } from './../store/budgets/actions';
 import moment from 'moment';
-import { history } from './../store/history';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPoundSign, faCalendar, faListUl } from '@fortawesome/free-solid-svg-icons'
+import { faPoundSign, faCalendar } from '@fortawesome/free-solid-svg-icons'
 import bulmaCalendar from 'bulma-calendar/dist/js/bulma-calendar';
+import accounting from 'accounting';
 
 const modes = {
     edit: 'edit',
     new: 'new'
 }
 
-const viewModes = {
-    list: 'list',
-    calendar: 'calendar'
-}
-
 class Budgets extends Component {
     constructor(props) {
         super(props);
-        const { year, month } = this.props.match.params;
 
-        if (year && month) {
-            const currentYear = parseInt(year),
-                currentMonth = parseInt(month) - 1,
-                date = new Date(currentYear, currentMonth);
-
-            this.state = {
-                currentDate: moment(date)
-            }
-        } else {
-            this.state = {
-                currentDate: moment()
-            };
-        }
-    }
-
-    componentDidMount() {
-        const { month, year } = this.props.match.params;
-        this.setCurrentBudgetDate(month, year);
-        this.getBudget(month, year);
-
-        this.setState({
+        this.state = {
+            currentDate: moment(),
             id: 0,
             submitted: false,
             valid: false,
             show: false,
             mode: modes.new,
-            viewMode: viewModes.list
-        });
+            id: 0,
+            category: 0,
+            amount: '',
+            date: ''
+        };
     }
 
-    componentDidUpdate() {
-        const { month, year } = this.props.match.params;
-        this.setCurrentBudgetDate(month, year);
-        this.getBudget(month, year);
+    componentDidMount() {
+        this.getBudget();
     }
 
-    toggleViewMode() {
-        const newViewMode = this.state.viewMode === viewModes.list ? viewModes.calendar : viewModes.list;
-        this.setState({
-            viewMode: newViewMode
-        });
-    }
+    getBudget() {
+        const { loading } = this.props;
+        const { currentDate } = this.state;
 
-    getBudget(month, year) {
-        if (month && year) {
-            const { budget, loading } = this.props;
-            const { currentDate } = this.state;
-
-            if (!loading) {
-                if (!budget && currentDate.year() && currentDate.month()) {
-                    this.props.getBudget(currentDate.year(), currentDate.month() + 1);
-                } else if (budget && budget.month !== currentDate.month() + 1) {
-                    this.props.getBudget(currentDate.year(), currentDate.month() + 1);
-                }
-            }
+        if (!loading) {
+            this.props.getBudget(currentDate.year(), currentDate.month() + 1);
         }
     }
 
-    setCurrentBudgetDate(month, year) {
-        if (!month && !year) {
-            const currentDate = moment();
-            this.setState({ currentDate: currentDate });
-            this.goToBudget(currentDate);
-        }
-    }
-
-    goBack() {
-        this.setState({ currentDate: this.state.currentDate.subtract(1, 'month') });
-        this.goToBudget(this.state.currentDate);
-    }
-
-    goForward() {
-        this.setState({ currentDate: this.state.currentDate.add(1, 'month') });
-        this.goToBudget(this.state.currentDate);
-    }
-
-    goToBudget(currentDate) {
-        history.push(`/budgets/${currentDate.month() + 1}/${currentDate.year()}`);
-    }
-
-    showModal = (item) => {
+    showModal(item) {
         if (!!item) {
             this.setState({
                 submitted: false,
                 show: true,
                 mode: modes.edit,
                 id: item.id,
+                category: item.category.id,
+                amount: item.amount,
+                date: item.date
             });
         } else {
             this.setState({
                 submitted: false,
                 show: true,
-                mode: modes.new
+                mode: modes.new,
+                id: 0,
+                category: 0,
+                amount: '',
+                date: ''
             });
         }
-    };
+    }
 
-    hideModal = () => {
+    hideModal() {
         this.setState({
             submitted: false,
             show: false,
-            id: 0
+            id: 0,
+            category: 0,
+            amount: '',
+            date: ''
         });
-    };
+    }
+
+    handleChange(e) {
+        const { name, value } = e.target;
+        this.setState({ [name]: value });
+    }
 
     handleSave() {
-        const { mode, id, category, amount } = this.state;
+        const { mode, id, category, amount, date } = this.state;
 
-        if (category, amount) {
+        if (category && amount && date) {
             this.setState({
                 submitted: true,
                 valid: true
             });
 
+            const transaction = {
+                id: id,
+                budgetId: 1,
+                category: {
+                    id: parseInt(category)
+                },
+                date: date,
+                amount: parseFloat(amount)
+            };
+
             if (mode === modes.new) {
-                this.props.addTransaction();
+                this.props.addTransaction(transaction);
             } else if (mode === modes.edit) {
-                this.props.editTransaction();
+                this.props.editTransaction(transaction);
             }
         } else {
             this.setState({
@@ -163,7 +129,7 @@ class Budgets extends Component {
     renderBudget(budget) {
         if (budget) {
             return (
-                <div class="tile is-ancestor">
+                <div className="tile is-ancestor">
                     {this.renderOutgoings()}
                     {this.renderExpenses()}
                 </div>
@@ -172,168 +138,148 @@ class Budgets extends Component {
     }
 
     renderOutgoings() {
+        const { outgoings } = this.props.budget;
         return (
-            <div class="tile is-4 is-vertical is-parent">
-                <div class="tile is-child box">
-                    <CollapsibleTable title="Outgoings - Dedicated">
-                        <tbody>
-                            <tr>
-                                <td>Mortgage</td>
-                                <td>£123.00</td>
-                            </tr>
-                            <tr>
-                                <td>Council tax</td>
-                                <td>£123.00</td>
-                            </tr>
-                        </tbody>
-                    </CollapsibleTable>
-                </div>
-                <div class="tile is-child box">
-                    <CollapsibleTable title="Outgoings - Budgeted">
-                        <tbody>
-                            <tr>
-                                <td>Mortgage</td>
-                                <td>£123.00</td>
-                            </tr>
-                            <tr>
-                                <td>Council tax</td>
-                                <td>£123.00</td>
-                            </tr>
-                        </tbody>
-                    </CollapsibleTable>
-                </div>
-                <div class="tile is-child box">
-                    <CollapsibleTable title="Outgoings - Savings">
-                        <tbody>
-                            <tr>
-                                <td>Mortgage</td>
-                                <td>£123.00</td>
-                            </tr>
-                            <tr>
-                                <td>Council tax</td>
-                                <td>£123.00</td>
-                            </tr>
-                        </tbody>
-                    </CollapsibleTable>
-                </div>
-                <div class="tile is-child box">
-                    <CollapsibleTable title="Outgoings - Totals">
-                        <tbody>
-                            <tr>
-                                <td>Mortgage</td>
-                                <td>£123.00</td>
-                            </tr>
-                            <tr>
-                                <td>Council tax</td>
-                                <td>£123.00</td>
-                            </tr>
-                        </tbody>
-                    </CollapsibleTable>
+            <div className="tile is-4 is-vertical is-parent">
+                <div className="tile is-child box">
+                    <CollapsibleDiv title="Outgoings">
+                        {outgoings.map((outgoing) => {
+                            return (
+                                <table key={outgoing.id} className="table is-striped">
+                                    <thead>
+                                        <tr>
+                                            <th colSpan="3">
+                                                {outgoing.category.name}
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                Budgeted
+                                            </td>
+                                            <td>
+                                                {accounting.formatMoney(outgoing.budgeted)}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                Actual
+                                            </td>
+                                            <td>
+                                                {accounting.formatMoney(outgoing.actual)}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                Remaining
+                                            </td>
+                                            <td className={outgoing.remaining < 0 ? 'has-text-danger' : ''}>
+                                                {accounting.formatMoney(outgoing.remaining)}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            )
+                        })}
+                    </CollapsibleDiv>
                 </div>
             </div>
         );
     }
 
     renderExpenses() {
-        const { viewMode } = this.state;
         return (
-            <div class="tile is-parent">
-                <div class="tile is-child box">
+            <div className="tile is-parent">
+                <div className="tile is-child box">
                     <h4>
                         Expenses
-                                <div class="buttons is-pulled-right">
-                            <a className="button is-small" onClick={() => this.toggleViewMode()}>
-                                <span class="icon is-small is-left">
-                                    <FontAwesomeIcon icon={viewMode === viewModes.list ? faCalendar : faListUl} />
-                                </span>
-                            </a>
-                        </div>
+                        <a className="button is-small is-primary is-pulled-right" onClick={() => this.showModal()}>Add</a>
                     </h4>
-                    {this.renderExpenseView()}
+                    {this.renderExpenseListView()}
                 </div>
             </div>
         );
     }
 
-    renderExpenseView() {
-        const { viewMode } = this.state;
-        if (viewMode === viewModes.list) {
-            return this.renderExpenseListView();
-        } else {
-            return this.renderExpenseCalendarView();
-        }
-    }
+    renderTransactions() {
+        const { transactions } = this.props.budget;
+        transactions.sort((a, b) => {
+            return moment(a.date, 'YYYY-DD-MM') - moment(b.date, 'YYYY-DD-MM');
+        });
 
-    renderExpenseListView() {
         return (
-            <div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>
-                                Date
-                                            </th>
-                            <th>
-                                Category
-                                            </th>
-                            <th>
-                                Amount
-                                            </th>
-                            <th>
-                                Notes
-                                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                01/01/0001
-                                        </td>
-                            <td>
-                                Test
-                                        </td>
-                            <td>
-                                £1,000.00
-                                        </td>
-                            <td>
-                                None
-                                        </td>
-                        </tr>
-                    </tbody>
-                </table>
-                <a className="button is-small is-primary is-pulled-right" onClick={() => this.showModal()}>Add</a>
-            </div>
+            transactions.map((transaction) =>
+                <tr key={transaction.id}>
+                    <td>{moment(transaction.date, 'YYYY-DD-MM').format('DD/MM/YYYY')}</td>
+                    <td>{this.getCategory(transaction)}</td>
+                    <td>{accounting.formatMoney(transaction.amount)}</td>
+                    <td>{transaction.notes}</td>
+                </tr>
+            )
         );
     }
 
-    renderExpenseCalendarView() {
-        // const calendars = bulmaCalendar.attach('[type="date"]');
-        // calendars.forEach(calendar => {
-        //     // Add listener to date:selected event
-        //     calendar.on('date:selected', date => {
-        //         console.log(date);
-        //     });
-        // });
-        // return (
-        //     <input type="date" data-display-mode="inline" data-is-range="true" data-close-on-select="false" />
-        // );
+    renderExpenseListView() {
+        const { transactions } = this.props.budget;
+        if (transactions) {
+            return (
+                <div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Category</th>
+                                <th>Amount</th>
+                                <th>Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {this.renderTransactions()}
+                        </tbody>
+                    </table>
+                </div>
+            );
+        }
+    }
+
+    getCategory(item) {
+        const { categories } = this.props.budget;
+        const category = categories.find((category) => {
+            return category.id === item.category.id;
+        });
+
+        return category.name;
+    }
+
+    renderCategories() {
+        if (this.props.budget) {
+            const { categories } = this.props.budget;
+            return (
+                categories.map((category) => {
+                    return (<option key={category.id} value={category.id}>{category.name}</option>)
+                })
+            );
+        }
     }
 
     render() {
         const { loading, budget } = this.props;
-        const { currentDate, mode, id, category, amount, valid, submitted } = this.state;
+        const { currentDate, mode, id, category, amount, date, valid, submitted } = this.state;
         const options = {
             showHeader: false,
             showFooter: false,
             todayButton: false,
             clearButton: false,
-            displayMode: 'dialog'
+            displayMode: 'dialog',
+            dateFormat: 'DD/MM/YYYY',
+            minDate: currentDate.startOf('month').format('DD/MM/YYYY'),
+            maxDate: currentDate.endOf('month').format('DD/MM/YYYY')
         };
         const calendars = bulmaCalendar.attach('[type="date"]', options);
         calendars.forEach(calendar => {
-            // Add listener to date:selected event
             calendar.on('date:selected', date => {
-                console.log(date);
+                this.setState({ date: moment(date.start).format('DD/MM/YYYY') });
             });
         });
         return (
@@ -345,8 +291,6 @@ class Budgets extends Component {
                         :
                         this.renderBudget(budget)
                 }
-                <button onClick={() => this.goBack()} className="button is-pulled-left">Go back</button>
-                <button onClick={() => this.goForward()} className="button is-pulled-right">Go forward</button>
                 <Modal buttonClass={submitted && !valid ? 'is-danger' : 'is-primary'}
                     show={this.isModalShown()}
                     loading={loading}
@@ -356,16 +300,32 @@ class Budgets extends Component {
                     <div className="field">
                         <label className="label">Date</label>
                         <div className="control">
-                            <input className="input" type="date" />
+                            <p className="control has-icons-left">
+                                <input className={submitted && !valid && !date ? 'input is-danger' : 'input'}
+                                    type="date"
+                                    placeholder="dd/mm/yyyy"
+                                    value={date}
+                                    onChange={(e) => this.handleChange(e)} />
+                                <span className="icon is-small is-left">
+                                    <FontAwesomeIcon icon={faCalendar} pull="left" />
+                                </span>
+                            </p>
                         </div>
+                        {
+                            submitted && !valid && !date &&
+                            <p className="help is-danger">
+                                This field is required
+                            </p>
+                        }
                     </div>
                     <div className="field">
                         <label className="label">Category</label>
                         <div className={submitted && !valid && !category ? 'select is-fullwidth is-danger' : 'select is-fullwidth'}>
                             <select name="category"
                                 value={category}
-                                onChange={this.handleChange}>
+                                onChange={(e) => this.handleChange(e)}>
                                 <option value="">Please select</option>
+                                {this.renderCategories()}
                             </select>
                         </div>
                         {
@@ -378,14 +338,14 @@ class Budgets extends Component {
                     <div className="field">
                         <label className="label">Amount</label>
                         <div className="control">
-                            <p class="control has-icons-left">
+                            <p className="control has-icons-left">
                                 <input className={submitted && !valid && !amount ? 'input is-danger' : 'input'}
                                     name="amount"
                                     value={amount}
                                     type="text"
                                     placeholder="Amount"
-                                    onChange={this.handleChange} />
-                                <span class="icon is-small is-left">
+                                    onChange={(e) => this.handleChange(e)} />
+                                <span className="icon is-small is-left">
                                     <FontAwesomeIcon icon={faPoundSign} pull="left" />
                                 </span>
                             </p>

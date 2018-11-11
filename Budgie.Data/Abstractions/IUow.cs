@@ -11,9 +11,7 @@ namespace Budgie.Data.Abstractions
         IRepository<User> Users { get; }
         IBudgetRepository Budgets { get; }
         ICategoryRepository Categories { get; }
-        IRepository<Income> Incomes { get; }
         IRepository<Outgoing> Outgoings { get; }
-        IRepository<Saving> Savings { get; }
         ITransactionRepository Transactions { get; }
     }
 }

@@ -4,10 +4,6 @@ namespace Budgie.Core
 {
     public class Outgoing : BaseEntity, IUserEntity
     {
-        public DateTime? Date { get; set; }
-
-        public bool Resolved { get; set; }
-
         public decimal Budgeted { get; set; }
 
         public decimal Actual { get; set; }
