@@ -135,8 +135,6 @@ namespace Budgie.Data.Migrations
 
                     b.Property<DateTime>("DateModified");
 
-                    b.Property<string>("Notes");
-
                     b.Property<int>("UserId");
 
                     b.HasKey("Id");

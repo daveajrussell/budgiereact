@@ -9,9 +9,6 @@ public class ApiOutgoing
     public int Id { get; set; }
 
     [DataMember]
-    public bool Resolved { get; set; }
-
-    [DataMember]
     public decimal Budgeted { get; set; }
 
     [DataMember]

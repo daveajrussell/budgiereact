@@ -4,7 +4,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Budgie.Data.Migrations
 {
-    public partial class initial : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -204,44 +204,6 @@ namespace Budgie.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Incomes",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
-                    DateAdded = table.Column<DateTime>(nullable: false),
-                    DateModified = table.Column<DateTime>(nullable: false),
-                    Date = table.Column<DateTime>(nullable: true),
-                    Resolved = table.Column<bool>(nullable: false),
-                    Total = table.Column<decimal>(nullable: false),
-                    CategoryId = table.Column<int>(nullable: false),
-                    BudgetId = table.Column<int>(nullable: false),
-                    UserId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Incomes", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Incomes_Budgets_BudgetId",
-                        column: x => x.BudgetId,
-                        principalTable: "Budgets",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Incomes_Categories_CategoryId",
-                        column: x => x.CategoryId,
-                        principalTable: "Categories",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Incomes_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Outgoings",
                 columns: table => new
                 {
@@ -249,8 +211,6 @@ namespace Budgie.Data.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
                     DateAdded = table.Column<DateTime>(nullable: false),
                     DateModified = table.Column<DateTime>(nullable: false),
-                    Date = table.Column<DateTime>(nullable: true),
-                    Resolved = table.Column<bool>(nullable: false),
                     Budgeted = table.Column<decimal>(nullable: false),
                     Actual = table.Column<decimal>(nullable: false),
                     Remaining = table.Column<decimal>(nullable: false),
@@ -282,44 +242,6 @@ namespace Budgie.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Savings",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
-                    DateAdded = table.Column<DateTime>(nullable: false),
-                    DateModified = table.Column<DateTime>(nullable: false),
-                    Date = table.Column<DateTime>(nullable: true),
-                    Resolved = table.Column<bool>(nullable: false),
-                    Total = table.Column<decimal>(nullable: false),
-                    CategoryId = table.Column<int>(nullable: false),
-                    BudgetId = table.Column<int>(nullable: false),
-                    UserId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Savings", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Savings_Budgets_BudgetId",
-                        column: x => x.BudgetId,
-                        principalTable: "Budgets",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Savings_Categories_CategoryId",
-                        column: x => x.CategoryId,
-                        principalTable: "Categories",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Savings_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Transactions",
                 columns: table => new
                 {
@@ -329,7 +251,6 @@ namespace Budgie.Data.Migrations
                     DateModified = table.Column<DateTime>(nullable: false),
                     Amount = table.Column<decimal>(nullable: false),
                     Date = table.Column<DateTime>(nullable: false),
-                    Notes = table.Column<string>(nullable: true),
                     CategoryId = table.Column<int>(nullable: false),
                     BudgetId = table.Column<int>(nullable: false),
                     UserId = table.Column<int>(nullable: false)
@@ -405,21 +326,6 @@ namespace Budgie.Data.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Incomes_BudgetId",
-                table: "Incomes",
-                column: "BudgetId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Incomes_CategoryId",
-                table: "Incomes",
-                column: "CategoryId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Incomes_UserId",
-                table: "Incomes",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Outgoings_BudgetId",
                 table: "Outgoings",
                 column: "BudgetId");
@@ -432,21 +338,6 @@ namespace Budgie.Data.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Outgoings_UserId",
                 table: "Outgoings",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Savings_BudgetId",
-                table: "Savings",
-                column: "BudgetId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Savings_CategoryId",
-                table: "Savings",
-                column: "CategoryId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Savings_UserId",
-                table: "Savings",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
@@ -483,13 +374,7 @@ namespace Budgie.Data.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Incomes");
-
-            migrationBuilder.DropTable(
                 name: "Outgoings");
-
-            migrationBuilder.DropTable(
-                name: "Savings");
 
             migrationBuilder.DropTable(
                 name: "Transactions");

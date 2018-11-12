@@ -52,5 +52,18 @@ export const actionCreators = {
             .catch((error) => {
                 dispatch({ type: types.transactionFailureType });
             });
+    },
+
+    adjustOutgoing: (outgoing) => (dispatch) => {
+        dispatch({ type: types.requestAdjustOutgoingType });
+
+        budgetService
+            .adjustOutgoing(outgoing)
+            .then(() => {
+                dispatch({ type: types.receiveAdjustOutgoingType, outgoing: outgoing });
+            })
+            .catch((error) => {
+                dispatch({ type: types.transactionFailureType });
+            })
     }
 };

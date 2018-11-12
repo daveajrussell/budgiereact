@@ -125,7 +125,6 @@ namespace Budgie.Api.Controllers
                 Category = category,
                 Date = model.Date,
                 Amount = model.Amount,
-                Notes = model.Notes,
                 UserId = Token.UserId
             };
 
@@ -154,7 +153,6 @@ namespace Budgie.Api.Controllers
                 transaction.CategoryId = category.Id;
                 transaction.Category = category;
                 transaction.Amount = model.Amount;
-                transaction.Notes = model.Notes;
 
                 _uow.Transactions.Update(transaction);
 
@@ -174,6 +172,18 @@ namespace Budgie.Api.Controllers
         public async Task DeleteTransaction(int id, [FromBody] ApiTransaction model)
         {
             _uow.Transactions.Delete(id);
+            await _uow.CommitAsync();
+        }
+
+        [HttpPut]
+        [Route("outgoings/adjust/{id:int}")]
+        public async Task AdjustOutgoing(int id, [FromBody] ApiOutgoing model)
+        {
+            var outgoing = await _uow.Outgoings.GetByIdAsync(id);
+            outgoing.Budgeted = model.Budgeted;
+
+            _uow.Outgoings.Update(outgoing);
+
             await _uow.CommitAsync();
         }
 

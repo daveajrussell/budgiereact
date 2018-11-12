@@ -15,12 +15,6 @@ public class ApiTransaction
     public DateTime Date { get; set; }
 
     [DataMember]
-    public bool Resolved { get; set; }
-
-    [DataMember]
-    public string Notes { get; set; }
-
-    [DataMember]
     public ApiCategory Category { get; set; }
 
     [DataMember]

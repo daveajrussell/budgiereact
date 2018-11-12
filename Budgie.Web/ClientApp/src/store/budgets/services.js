@@ -6,7 +6,8 @@ export const budgetService = {
     getBudget,
     addTransaction,
     editTransaction,
-    deleteTransaction
+    deleteTransaction,
+    adjustOutgoing
 };
 
 function getBudget(year, month) {
@@ -53,4 +54,16 @@ function deleteTransaction(transaction) {
     return fetch(`${config.apiUrl}/api/budgets/transaction/${transaction.id}`, requestOptions)
         .then(handleResponse, handleError)
         .then(transaction => transaction);
+}
+
+function adjustOutgoing(outgoing) {
+    const requestOptions = {
+        method: 'PUT',
+        headers: authHeader(),
+        body: JSON.stringify(outgoing)
+    };
+
+    return fetch(`${config.apiUrl}/api/budgets/outgoings/adjust/${outgoing.id}`, requestOptions)
+        .then(handleResponse, handleError)
+        .then(outgoing => outgoing);
 }

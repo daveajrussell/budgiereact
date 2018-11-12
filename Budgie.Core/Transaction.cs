@@ -8,8 +8,6 @@ namespace Budgie.Core
 
         public DateTime Date { get; set; }
 
-        public string Notes { get; set; }
-
         public int CategoryId { get; set; }
 
         public virtual Category Category { get; set; }

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Modal, CollapsibleDiv } from './components';
+import { Modal, CollapsibleDiv, InlineOutgoingEditor } from './components';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { actionCreators } from './../store/budgets/actions';
@@ -100,9 +100,11 @@ class Budgets extends Component {
                 category: {
                     id: parseInt(category)
                 },
-                date: date,
+                date: moment(date, 'DD/MM/YYYY').format('MM/DD/YYYY'),
                 amount: parseFloat(amount)
             };
+
+            console.log(transaction);
 
             if (mode === modes.new) {
                 this.props.addTransaction(transaction);
@@ -137,6 +139,10 @@ class Budgets extends Component {
         }
     }
 
+    handleOutgoingAdjustment(outgoing) {
+        this.props.adjustOutgoing(outgoing);
+    }
+
     renderOutgoings() {
         const { outgoings } = this.props.budget;
         return (
@@ -159,7 +165,10 @@ class Budgets extends Component {
                                                 Budgeted
                                             </td>
                                             <td>
-                                                {accounting.formatMoney(outgoing.budgeted)}
+                                                <InlineOutgoingEditor
+                                                    outgoingId={outgoing.id}
+                                                    value={accounting.formatMoney(outgoing.budgeted)}
+                                                    handleSave={(outgoing) => this.handleOutgoingAdjustment(outgoing)} />
                                             </td>
                                         </tr>
                                         <tr>
@@ -174,7 +183,7 @@ class Budgets extends Component {
                                             <td>
                                                 Remaining
                                             </td>
-                                            <td className={outgoing.remaining < 0 ? 'has-text-danger' : ''}>
+                                            <td className={outgoing.remaining < 0 ? 'has-text-danger' : 'has-text-success'}>
                                                 {accounting.formatMoney(outgoing.remaining)}
                                             </td>
                                         </tr>
@@ -205,16 +214,15 @@ class Budgets extends Component {
     renderTransactions() {
         const { transactions } = this.props.budget;
         transactions.sort((a, b) => {
-            return moment(a.date, 'YYYY-DD-MM') - moment(b.date, 'YYYY-DD-MM');
+            return moment(a.date, 'YYYY-MM-DD') - moment(b.date, 'YYYY-MM-DD');
         });
 
         return (
             transactions.map((transaction) =>
                 <tr key={transaction.id}>
-                    <td>{moment(transaction.date, 'YYYY-DD-MM').format('DD/MM/YYYY')}</td>
+                    <td>{moment(transaction.date, 'YYYY-MM-DDT00:00:00').format('DD/MM/YYYY')}</td>
                     <td>{this.getCategory(transaction)}</td>
                     <td>{accounting.formatMoney(transaction.amount)}</td>
-                    <td>{transaction.notes}</td>
                 </tr>
             )
         );
@@ -231,7 +239,6 @@ class Budgets extends Component {
                                 <th>Date</th>
                                 <th>Category</th>
                                 <th>Amount</th>
-                                <th>Notes</th>
                             </tr>
                         </thead>
                         <tbody>

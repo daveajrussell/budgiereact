@@ -10,8 +10,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Budgie.Data.Migrations
 {
     [DbContext(typeof(BudgieDbContext))]
-    [Migration("20181111171140_Simplification update")]
-    partial class Simplificationupdate
+    [Migration("20181112202429_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -136,8 +136,6 @@ namespace Budgie.Data.Migrations
                     b.Property<DateTime>("DateAdded");
 
                     b.Property<DateTime>("DateModified");
-
-                    b.Property<string>("Notes");
 
                     b.Property<int>("UserId");
 
