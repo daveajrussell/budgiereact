@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using Budgie.Core;
 using Budgie.Core.Constants;
+using Budgie.Core.Enums;
 using Budgie.Data.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
@@ -36,6 +37,29 @@ namespace Budgie.Data.Helpers
 
                 userService.CreateAsync(user, "Testing1!");
                 userService.AddToRoleAsync(user, BudgieRoles.User);
+            }
+
+            if (!context.Categories.Any())
+            {
+                context.Categories.Add(new Category
+                {
+                    Name = "Groceries",
+                    UserId = 1,
+                    Type = CategoryType.Outgoing,
+                    DateAdded = DateTime.UtcNow,
+                    DateModified = DateTime.UtcNow
+                });
+
+                context.Categories.Add(new Category
+                {
+                    Name = "Gadgets",
+                    UserId = 1,
+                    Type = CategoryType.Outgoing,
+                    DateAdded = DateTime.UtcNow,
+                    DateModified = DateTime.UtcNow
+                });
+
+                context.SaveChanges();
             }
         }
     }

@@ -42,7 +42,7 @@ export const actionCreators = {
     },
 
     deleteTransaction: (transaction) => (dispatch) => {
-        dispatch({ type: types.requestDeleteTransactionType });
+        dispatch({ type: types.requestDeleteTransactionType, transaction: transaction });
 
         budgetService
             .deleteTransaction(transaction)
@@ -54,13 +54,13 @@ export const actionCreators = {
             });
     },
 
-    adjustOutgoing: (outgoing) => (dispatch) => {
-        dispatch({ type: types.requestAdjustOutgoingType });
+    editOutgoing: (outgoing) => (dispatch) => {
+        dispatch({ type: types.requestEditOutgoingType });
 
         budgetService
-            .adjustOutgoing(outgoing)
-            .then(() => {
-                dispatch({ type: types.receiveAdjustOutgoingType, outgoing: outgoing });
+            .editOutgoing(outgoing)
+            .then((outgoing) => {
+                dispatch({ type: types.receiveEditOutgoingType, outgoing: outgoing });
             })
             .catch((error) => {
                 dispatch({ type: types.transactionFailureType });

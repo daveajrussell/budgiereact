@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Link, withRouter } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { actionCreators } from './../store/authentication/actions';
 import { ButtonSpinner } from './components/ButtonSpinner';
 
@@ -110,7 +110,7 @@ class Login extends Component {
     }
 }
 
-export default withRouter(connect(
+export default connect(
     state => state,
     dispatch => bindActionCreators(actionCreators, dispatch)
-)(Login));
+)(Login);

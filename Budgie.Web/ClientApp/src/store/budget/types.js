@@ -11,7 +11,7 @@ export const receiveEditTransactionType = 'RECEIVE_EDIT_TRANSACTION';
 export const requestDeleteTransactionType = 'REQUEST_DELETE_TRANSACTION';
 export const receiveDeleteTransactionType = 'RECEIVE_DELETE_TRANSACTION';
 
-export const requestAdjustOutgoingType = 'REQUEST_ADJUST_OUTGOING';
-export const receiveAdjustOutgoingType = 'RECEIVE_ADJUST_OUTGOING';
+export const requestEditOutgoingType = 'REQUEST_EDIT_OUTGOING';
+export const receiveEditOutgoingType = 'RECEIVE_EDIT_OUTGOING';
 
 export const transactionFailureType = 'TRANSACTION_FAILURE';

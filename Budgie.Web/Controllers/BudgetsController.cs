@@ -61,20 +61,6 @@ namespace Budgie.Api.Controllers
 
                 budget.Outgoings = outgoings;
 
-                var transactions = categories
-                    .Select(x => new Transaction
-                    {
-                        BudgetId = budget.Id,
-                        Budget = budget,
-                        UserId = Token.UserId,
-                        CategoryId = x.Id,
-                        Category = x
-                    })
-                    .ToList();
-
-                budget.Transactions = transactions;
-
-                await _uow.Transactions.AddRangeAsync(transactions);
                 await _uow.Budgets.AddAsync(budget);
                 await _uow.CommitAsync();
             }
@@ -130,7 +116,7 @@ namespace Budgie.Api.Controllers
 
             await _uow.Transactions.AddAsync(transaction);
 
-            UpdateTransaction(model, category);
+            UpdateTransaction(model, category, 0);
 
             await _uow.CommitAsync();
 
@@ -152,11 +138,18 @@ namespace Budgie.Api.Controllers
                 transaction.Date = model.Date;
                 transaction.CategoryId = category.Id;
                 transaction.Category = category;
+
+                decimal delta = 0;
+                if (transaction.Amount != model.Amount)
+                {
+                    delta = transaction.Amount - model.Amount;
+                }
+
                 transaction.Amount = model.Amount;
 
                 _uow.Transactions.Update(transaction);
 
-                UpdateTransaction(model, category);
+                UpdateTransaction(model, category, delta);
 
                 await _uow.CommitAsync();
 
@@ -169,15 +162,26 @@ namespace Budgie.Api.Controllers
 
         [HttpDelete]
         [Route("transaction/{id:int}")]
-        public async Task DeleteTransaction(int id, [FromBody] ApiTransaction model)
+        public async Task<IActionResult> DeleteTransaction(int id, [FromBody] ApiTransaction model)
         {
+            var transaction = await _uow.Transactions.GetByIdAsync(id);
+            var category = await _uow.Categories.GetByIdAsync(model.Category.Id);
+
+            if (transaction != null)
+            {
+                UpdateTransaction(model, category, transaction.Amount);
+                model.Amount = 0;
+            }
+
             _uow.Transactions.Delete(id);
             await _uow.CommitAsync();
+
+            return new JsonResult(model);
         }
 
         [HttpPut]
-        [Route("outgoings/adjust/{id:int}")]
-        public async Task AdjustOutgoing(int id, [FromBody] ApiOutgoing model)
+        [Route("outgoings/{id:int}")]
+        public async Task<IActionResult> EditOutgoing(int id, [FromBody] ApiOutgoing model)
         {
             var outgoing = await _uow.Outgoings.GetByIdAsync(id);
             outgoing.Budgeted = model.Budgeted;
@@ -185,9 +189,11 @@ namespace Budgie.Api.Controllers
             _uow.Outgoings.Update(outgoing);
 
             await _uow.CommitAsync();
+
+            return new JsonResult(model);
         }
 
-        private void UpdateTransaction(ApiTransaction model, Category category)
+        private void UpdateTransaction(ApiTransaction model, Category category, decimal delta)
         {
             if (category.Type == CategoryType.Outgoing)
             {
@@ -199,8 +205,17 @@ namespace Budgie.Api.Controllers
                 if (outgoing != null)
                 {
                     outgoing.DateModified = DateTime.UtcNow;
-                    outgoing.Actual += model.Amount;
-                    outgoing.Remaining = outgoing.Remaining - model.Amount;
+
+                    if (delta == 0)
+                    {
+                        outgoing.Actual += model.Amount;
+                        outgoing.Remaining = outgoing.Remaining - model.Amount;
+                    }
+                    else
+                    {
+                        outgoing.Actual -= delta;
+                        outgoing.Remaining -= delta;
+                    }
 
                     _uow.Outgoings.Update(outgoing);
                 }

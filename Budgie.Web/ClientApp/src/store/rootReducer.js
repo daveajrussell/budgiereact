@@ -2,12 +2,12 @@ import { combineReducers } from 'redux';
 import { routerReducer } from 'react-router-redux';
 import authentication from './authentication/reducer';
 import categories from './categories/reducer';
-import budgets from './budgets/reducer';
+import budget from './budget/reducer';
 
 const reducers = {
   categories,
   authentication,
-  budgets
+  budget
 };
 
 export const rootReducer = combineReducers({

@@ -1,16 +1,15 @@
 import React from "react";
 import Helmet from "react-helmet";
 
-import Site from "./layout/Site";
 import Header from "./layout/Header";
 import Content from "./layout/Content";
 
 const Layout = () => (
-  <Site>
+  <div>
     <Helmet title="Budgie" />
     <Header />
     <Content />
-  </Site>
+  </div>
 );
 
 export default Layout;

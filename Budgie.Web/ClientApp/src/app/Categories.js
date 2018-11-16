@@ -25,10 +25,6 @@ class Categories extends Component {
             show: false,
             mode: modes.new
         };
-
-        this.handleChange = this.handleChange.bind(this);
-        this.handleSave = this.handleSave.bind(this);
-        this.handleDelete = this.handleDelete.bind(this);
     }
 
     componentDidMount() {
@@ -163,8 +159,8 @@ class Categories extends Component {
                     show={this.isModalShown()}
                     loading={loading}
                     title={mode === modes.new ? 'Add new category' : 'Edit category'}
-                    handleClose={this.hideModal}
-                    handleSave={this.handleSave}>
+                    handleClose={() => this.hideModal()}
+                    handleSave={() => this.handleSave()}>
                     <div className="field">
                         <label className="label">Name</label>
                         <div className="control">
@@ -173,7 +169,7 @@ class Categories extends Component {
                                 value={name}
                                 type="text"
                                 placeholder="The name of your category"
-                                onChange={this.handleChange} />
+                                onChange={(e) => this.handleChange(e)} />
                         </div>
                         {
                             submitted && !valid && !name &&
@@ -187,7 +183,7 @@ class Categories extends Component {
                         <div className={submitted && !valid && !type ? 'select is-fullwidth is-danger' : 'select is-fullwidth'}>
                             <select name="type"
                                 value={type}
-                                onChange={this.handleChange}>
+                                onChange={(e) => this.handleChange(e)}>
                                 <option value="">Please select</option>
                                 <option value="1">Outgoing</option>
                             </select>

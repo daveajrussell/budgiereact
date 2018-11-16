@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import { Modal, CollapsibleDiv, InlineOutgoingEditor } from './components';
+import { Modal, CollapsibleDiv, InlineEditor } from './components';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { actionCreators } from './../store/budgets/actions';
+import { actionCreators } from './../store/budget/actions';
 import moment from 'moment';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPoundSign, faCalendar } from '@fortawesome/free-solid-svg-icons'
@@ -14,7 +14,7 @@ const modes = {
     new: 'new'
 }
 
-class Budgets extends Component {
+class Budget extends Component {
     constructor(props) {
         super(props);
 
@@ -45,28 +45,16 @@ class Budgets extends Component {
         }
     }
 
-    showModal(item) {
-        if (!!item) {
-            this.setState({
-                submitted: false,
-                show: true,
-                mode: modes.edit,
-                id: item.id,
-                category: item.category.id,
-                amount: item.amount,
-                date: item.date
-            });
-        } else {
-            this.setState({
-                submitted: false,
-                show: true,
-                mode: modes.new,
-                id: 0,
-                category: 0,
-                amount: '',
-                date: ''
-            });
-        }
+    showModal() {
+        this.setState({
+            submitted: false,
+            show: true,
+            mode: modes.new,
+            id: 0,
+            category: 0,
+            amount: '',
+            date: ''
+        });
     }
 
     hideModal() {
@@ -104,8 +92,6 @@ class Budgets extends Component {
                 amount: parseFloat(amount)
             };
 
-            console.log(transaction);
-
             if (mode === modes.new) {
                 this.props.addTransaction(transaction);
             } else if (mode === modes.edit) {
@@ -128,23 +114,42 @@ class Budgets extends Component {
         return show;
     }
 
-    renderBudget(budget) {
-        if (budget) {
-            return (
-                <div className="tile is-ancestor">
-                    {this.renderOutgoings()}
-                    {this.renderExpenses()}
-                </div>
-            )
-        }
+    renderBudget() {
+        return (
+            <div className="tile is-ancestor">
+                {this.renderOutgoings()}
+                {this.renderExpenses()}
+            </div>
+        )
     }
 
-    handleOutgoingAdjustment(outgoing) {
-        this.props.adjustOutgoing(outgoing);
+    handleOutgoingEdit(value, o) {
+        const outgoing = {
+            id: o.id,
+            budgeted: value
+        };
+
+        this.props.editOutgoing(outgoing);
+    }
+
+    handleTransactionEdit(value, t) {
+        const transaction = {
+            id: t.id,
+            amount: value,
+            date: t.date,
+            category: t.category,
+            budgetId: t.budgetId
+        };
+
+        this.props.editTransaction(transaction);
+    }
+
+    deleteTransaction(transaction) {
+        this.props.deleteTransaction(transaction);
     }
 
     renderOutgoings() {
-        const { outgoings } = this.props.budget;
+        const { outgoings } = this.props;
         return (
             <div className="tile is-4 is-vertical is-parent">
                 <div className="tile is-child box">
@@ -165,10 +170,10 @@ class Budgets extends Component {
                                                 Budgeted
                                             </td>
                                             <td>
-                                                <InlineOutgoingEditor
-                                                    outgoingId={outgoing.id}
+                                                <InlineEditor
+                                                    id={outgoing.id}
                                                     value={accounting.formatMoney(outgoing.budgeted)}
-                                                    handleSave={(outgoing) => this.handleOutgoingAdjustment(outgoing)} />
+                                                    handleSave={(value) => this.handleOutgoingEdit(value, outgoing)} />
                                             </td>
                                         </tr>
                                         <tr>
@@ -212,7 +217,7 @@ class Budgets extends Component {
     }
 
     renderTransactions() {
-        const { transactions } = this.props.budget;
+        const { transactions } = this.props;
         transactions.sort((a, b) => {
             return moment(a.date, 'YYYY-MM-DD') - moment(b.date, 'YYYY-MM-DD');
         });
@@ -222,14 +227,25 @@ class Budgets extends Component {
                 <tr key={transaction.id}>
                     <td>{moment(transaction.date, 'YYYY-MM-DDT00:00:00').format('DD/MM/YYYY')}</td>
                     <td>{this.getCategory(transaction)}</td>
-                    <td>{accounting.formatMoney(transaction.amount)}</td>
+                    <td>
+                        <InlineEditor
+                            id={transaction.id}
+                            value={accounting.formatMoney(transaction.amount)}
+                            handleSave={(value) => this.handleTransactionEdit(value, transaction)} />
+                    </td>
+                    <td>
+                        <p className="control">
+                            <button className={'button is-small is-danger ' + (transaction.deleting ? 'is-loading' : '')}
+                                onClick={() => !transaction.deleting && this.deleteTransaction(transaction)}>Delete</button>
+                        </p>
+                    </td>
                 </tr>
             )
         );
     }
 
     renderExpenseListView() {
-        const { transactions } = this.props.budget;
+        const { transactions } = this.props;
         if (transactions) {
             return (
                 <div>
@@ -239,6 +255,7 @@ class Budgets extends Component {
                                 <th>Date</th>
                                 <th>Category</th>
                                 <th>Amount</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -251,7 +268,7 @@ class Budgets extends Component {
     }
 
     getCategory(item) {
-        const { categories } = this.props.budget;
+        const { categories } = this.props;
         const category = categories.find((category) => {
             return category.id === item.category.id;
         });
@@ -260,8 +277,8 @@ class Budgets extends Component {
     }
 
     renderCategories() {
-        if (this.props.budget) {
-            const { categories } = this.props.budget;
+        const { categories } = this.props;
+        if (categories) {
             return (
                 categories.map((category) => {
                     return (<option key={category.id} value={category.id}>{category.name}</option>)
@@ -271,7 +288,7 @@ class Budgets extends Component {
     }
 
     render() {
-        const { loading, budget } = this.props;
+        const { loading } = this.props;
         const { currentDate, mode, id, category, amount, date, valid, submitted } = this.state;
         const options = {
             showHeader: false,
@@ -296,7 +313,7 @@ class Budgets extends Component {
                     loading ?
                         <div>Loading...</div>
                         :
-                        this.renderBudget(budget)
+                        this.renderBudget()
                 }
                 <Modal buttonClass={submitted && !valid ? 'is-danger' : 'is-primary'}
                     show={this.isModalShown()}
@@ -371,6 +388,6 @@ class Budgets extends Component {
 }
 
 export default connect(
-    state => state.budgets,
+    state => state.budget,
     dispatch => bindActionCreators(actionCreators, dispatch)
-)(Budgets);
+)(Budget);

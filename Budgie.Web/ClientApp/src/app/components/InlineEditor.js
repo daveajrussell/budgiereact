@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import accounting from 'accounting';
 
-export class InlineOutgoingEditor extends Component {
+export class InlineEditor extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -19,11 +19,7 @@ export class InlineOutgoingEditor extends Component {
 
     saveChanges() {
         const { value } = this.state;
-        const { outgoingId } = this.props;
-        this.props.handleSave({
-            id: outgoingId,
-            budgeted: parseFloat(value)
-        });
+        this.props.handleSave(parseFloat(value));
         this.toggleEditor();
     }
 

@@ -1,18 +1,30 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { history } from '../../store/history';
 
 class Header extends Component {
 
-  state = {
-    isActive: false,
-    isExpanded: false
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      isActive: false,
+      isExpanded: false
+    }
   }
 
-  toggleNav = () => {
-    this.setState(prevState => ({
-      isActive: !prevState.isActive
-    }));
+  componentDidMount() {
+    history.listen(location => {
+      this.setState({
+        isExpanded: false
+      });
+    });
+  }
+
+  componentDidUpdate() {
+    console.log(this.props);
+    console.log(this.state);
   }
 
   toggleBurger = () => {
@@ -32,7 +44,7 @@ class Header extends Component {
           <Link
             className="navbar-item brand-text"
             to="/">
-            <strong>Budgie</strong>
+            <strong>budgie</strong>
           </Link>
           <a onClick={() => this.toggleBurger()} role="button" className={burgerClass} aria-label="menu" aria-expanded={isExpanded} data-target="navbar">
             <span aria-hidden="true"></span>
@@ -60,8 +72,8 @@ function renderAppActions(props) {
         </Link>
         <Link
           className="navbar-item"
-          to="/budgets">
-          <span>Budgets</span>
+          to="/budget">
+          <span>Budget</span>
         </Link>
       </div>
     );
