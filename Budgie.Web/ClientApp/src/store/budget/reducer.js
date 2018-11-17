@@ -37,9 +37,13 @@ export default function reducer(state, action) {
                     return item;
                 }
 
-                item.actual += action.transaction.amount;
-                item.remaining = item.budgeted - item.actual;
-                return item;
+                const actual = item.actual + action.transaction.amount;
+
+                return {
+                    ...item,
+                    actual: actual,
+                    remaining: item.budgeted - actual
+                }
             }),
             loading: false
         }
@@ -53,7 +57,7 @@ export default function reducer(state, action) {
 
     if (action.type === types.receiveEditTransactionType) {
         const accumulated = state.transactions.reduce((accumulator, currentValue) => {
-            if (currentValue.category.id === action.transaction.category.id) {
+            if (currentValue.id !== action.transaction.id && currentValue.category.id === action.transaction.category.id) {
                 return accumulator + currentValue.amount;
             }
 
@@ -67,21 +71,25 @@ export default function reducer(state, action) {
                     return item;
                 }
 
-                item.actual = accumulated;
-                item.remaining = item.budgeted - item.actual;
+                const actual = accumulated + action.transaction.amount;
 
-                return item;
+                return {
+                    ...item,
+                    actual: actual,
+                    remaining: item.budgeted - actual
+                }
             }),
             transactions: state.transactions.map((item) => {
                 if (item.id !== action.transaction.id) {
                     return item;
                 }
 
-                item.amount = action.transaction.amount;
-                item.date = action.transaction.date;
-                item.category = action.transaction.category;
-
-                return item;
+                return {
+                    ...item,
+                    amount: action.transaction.amount,
+                    date: action.transaction.date,
+                    category: action.transaction.category
+                }
             })
         }
     }
@@ -108,16 +116,19 @@ export default function reducer(state, action) {
                     return item;
                 }
 
-                item.actual = accumulated;
-                item.remaining = item.budgeted - item.actual;
+                const actual = accumulated;
 
-                return item;
+                return {
+                    ...item,
+                    actual: accumulated,
+                    remaining: item.budgeted - actual
+                }
             }),
             transactions: state.transactions.filter(transaction => transaction.id !== action.transaction.id)
         }
     }
 
-    if (action.type === types.transactionFailureType) {
+    if (action.type === types.transactionFailureType || action.type === types.budgetFailureType) {
         return {
             ...state,
             loading: false
@@ -138,9 +149,13 @@ export default function reducer(state, action) {
                     return item;
                 }
 
-                item.budgeted = action.outgoing.budgeted;
-                item.remaining = item.budgeted - item.actual;
-                return item;
+                const budgeted = action.outgoing.budgeted;
+
+                return {
+                    ...item,
+                    budgeted: budgeted,
+                    remaining: budgeted - item.actual
+                }
             })
         }
     }

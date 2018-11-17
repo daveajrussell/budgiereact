@@ -12,9 +12,8 @@ export function handleResponse(response) {
         } else {
             if (response.status === 401) {
                 localStorage.removeItem('user');
-                history
-                    .push('/login')
-                    .then(() => reject());
+                history.push('/login');
+                reject();
             } else {
                 response.text().then(text => reject(text));
             }

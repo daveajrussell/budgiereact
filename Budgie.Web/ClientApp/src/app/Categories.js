@@ -105,12 +105,12 @@ class Categories extends Component {
 
     render() {
         const { items, loading } = this.props.categories;
-        const { mode, id, type, name, valid, submitted } = this.state;
+        const { mode, type, name, valid, submitted } = this.state;
         return (
             <main>
                 <h3>
                     Categories
-                    <a className="button is-small is-primary is-pulled-right" onClick={() => this.showModal()}>New</a>
+                    <button className="button is-small is-primary is-pulled-right" onClick={() => this.showModal()}>New</button>
                 </h3>
                 {
                     loading ?

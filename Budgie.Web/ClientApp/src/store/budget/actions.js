@@ -11,6 +11,7 @@ export const actionCreators = {
                 dispatch({ type: types.receiveBudgetType, budget: budget });
             })
             .catch((error) => {
+                console.log(error);
                 dispatch({ type: types.budgetFailureType });
             });
     },
@@ -24,6 +25,7 @@ export const actionCreators = {
                 dispatch({ type: types.receiveNewTransactionType, transaction: transaction });
             })
             .catch((error) => {
+                console.log(error);
                 dispatch({ type: types.transactionFailureType });
             });
     },
@@ -37,6 +39,7 @@ export const actionCreators = {
                 dispatch({ type: types.receiveEditTransactionType, transaction: transaction });
             })
             .catch((error) => {
+                console.log(error);
                 dispatch({ type: types.transactionFailureType });
             });
     },
@@ -50,6 +53,7 @@ export const actionCreators = {
                 dispatch({ type: types.receiveDeleteTransactionType, transaction: transaction });
             })
             .catch((error) => {
+                console.log(error);
                 dispatch({ type: types.transactionFailureType });
             });
     },
@@ -63,6 +67,7 @@ export const actionCreators = {
                 dispatch({ type: types.receiveEditOutgoingType, outgoing: outgoing });
             })
             .catch((error) => {
+                console.log(error);
                 dispatch({ type: types.transactionFailureType });
             })
     }

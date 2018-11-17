@@ -12,6 +12,7 @@ export const actionCreators = {
                 dispatch({ type: types.receiveAllCategoriesType, categories: categories });
             })
             .catch((error) => {
+                console.log(error);
                 dispatch({ type: types.allCategoriesFailureType });
             });
     },
@@ -25,6 +26,7 @@ export const actionCreators = {
                 dispatch({ type: types.receiveNewCategoryType, category: category });
             })
             .catch((error) => {
+                console.log(error);
                 dispatch({ type: types.newCategoryFailureType })
             });
     },
@@ -38,7 +40,7 @@ export const actionCreators = {
                 dispatch({ type: types.receiveDeleteCategoryType, category });
             })
             .catch((error) => {
-
+                console.log(error);
             });
     },
 
@@ -51,7 +53,7 @@ export const actionCreators = {
                 dispatch({ type: types.receiveEditCategoryType, category });
             })
             .catch((error) => {
-
+                console.log(error);
             })
     }
 };

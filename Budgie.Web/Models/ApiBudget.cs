@@ -18,6 +18,9 @@ public class ApiBudget
     public decimal TotalBudgeted { get; set; }
 
     [DataMember]
+    public decimal TotalActuals { get; set; }
+
+    [DataMember]
     public IEnumerable<ApiOutgoing> Outgoings { get; set; }
 
     [DataMember]

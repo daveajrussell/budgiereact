@@ -98,7 +98,7 @@ class Login extends Component {
                     </div>
                     <div className="field is-grouped">
                         <p className="control">
-                            <ButtonSpinner text="Login" loading={loggingIn} buttonClass={(submitted && !valid) || submitted && valid && !loggingIn && !loginSuccess ? 'is-danger' : 'is-primary'} />
+                            <ButtonSpinner text="Login" loading={loggingIn} buttonClass={(submitted && !valid) || (submitted && valid && !loggingIn && !loginSuccess) ? 'is-danger' : 'is-primary'} />
                         </p>
                         <p>
                             <Link to="/register" className="button">Register</Link>

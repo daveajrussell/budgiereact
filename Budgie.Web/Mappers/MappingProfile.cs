@@ -11,6 +11,7 @@ public class MappingProfile : Profile
         CreateMap<Outgoing, ApiOutgoing>();
         CreateMap<Transaction, ApiTransaction>();
         CreateMap<Budget, ApiBudget>()
-        .ForMember(dest => dest.TotalBudgeted, src => src.MapFrom(x => x.Outgoings.Sum(y => y.Budgeted)));
+        .ForMember(dest => dest.TotalBudgeted, src => src.MapFrom(x => x.Outgoings.Sum(y => y.Budgeted)))
+        .ForMember(dest => dest.TotalActuals, src => src.MapFrom(x => x.Outgoings.Sum(y => y.Actual)));
     }
 }

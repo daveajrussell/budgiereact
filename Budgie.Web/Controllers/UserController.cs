@@ -64,7 +64,7 @@ namespace Budgie.Web.Controllers
                     issuer: "budgie.com",
                     audience: "budgie.com",
                     claims: claims,
-                    expires: DateTime.Now.AddMinutes(60),
+                    expires: DateTime.UtcNow.AddMonths(1),
                     signingCredentials: creds);
 
                 var tokenString = new JwtSecurityTokenHandler().WriteToken(token);

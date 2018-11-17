@@ -25,7 +25,6 @@ class Budget extends Component {
             valid: false,
             show: false,
             mode: modes.new,
-            id: 0,
             category: 0,
             amount: '',
             date: ''
@@ -33,10 +32,6 @@ class Budget extends Component {
     }
 
     componentDidMount() {
-        this.getBudget();
-    }
-
-    getBudget() {
         const { loading } = this.props;
         const { currentDate } = this.state;
 
@@ -208,7 +203,7 @@ class Budget extends Component {
                 <div className="tile is-child box">
                     <h4>
                         Expenses
-                        <a className="button is-small is-primary is-pulled-right" onClick={() => this.showModal()}>Add</a>
+                        <button className="button is-small is-primary is-pulled-right" onClick={() => this.showModal()}>Add</button>
                     </h4>
                     {this.renderExpenseListView()}
                 </div>
@@ -289,7 +284,7 @@ class Budget extends Component {
 
     render() {
         const { loading } = this.props;
-        const { currentDate, mode, id, category, amount, date, valid, submitted } = this.state;
+        const { currentDate, mode, category, amount, date, valid, submitted } = this.state;
         const options = {
             showHeader: false,
             showFooter: false,

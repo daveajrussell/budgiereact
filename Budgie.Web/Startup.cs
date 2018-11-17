@@ -82,19 +82,25 @@ namespace Budgie.Web
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             })
-            .AddJwtBearer(x =>
+            .AddJwtBearer(options =>
             {
-                x.ClaimsIssuer = "budgie.com";
-                x.SaveToken = true;
-                x.TokenValidationParameters = new TokenValidationParameters
+                options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
+                    // Clock skew compensates for server time drift.
+                    // We recommend 5 minutes or less:
+                    ClockSkew = TimeSpan.FromMinutes(5),
+                    // Specify the key used to sign the token:
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    RequireSignedTokens = true,
+                    // Ensure the token hasn't expired:
+                    RequireExpirationTime = true,
                     ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
-                    ValidIssuer = "budgie.com",
+                    // Ensure the token audience matches our audience value (default true):
+                    ValidateAudience = true,
                     ValidAudience = "budgie.com",
-                    IssuerSigningKey = new SymmetricSecurityKey(key)
+                    // Ensure the token was issued by a trusted authorization server (default true):
+                    ValidateIssuer = true,
+                    ValidIssuer = "budgie.com"
                 };
             });
 
@@ -145,19 +151,25 @@ namespace Budgie.Web
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             })
-            .AddJwtBearer(x =>
+            .AddJwtBearer(options =>
             {
-                x.ClaimsIssuer = "budgie.com";
-                x.SaveToken = true;
-                x.TokenValidationParameters = new TokenValidationParameters
+                options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
+                    // Clock skew compensates for server time drift.
+                    // We recommend 5 minutes or less:
+                    ClockSkew = TimeSpan.FromMinutes(5),
+                    // Specify the key used to sign the token:
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    RequireSignedTokens = true,
+                    // Ensure the token hasn't expired:
+                    RequireExpirationTime = true,
                     ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
-                    ValidIssuer = "budgie.com",
+                    // Ensure the token audience matches our audience value (default true):
+                    ValidateAudience = true,
                     ValidAudience = "budgie.com",
-                    IssuerSigningKey = new SymmetricSecurityKey(key)
+                    // Ensure the token was issued by a trusted authorization server (default true):
+                    ValidateIssuer = true,
+                    ValidIssuer = "budgie.com"
                 };
             });
 

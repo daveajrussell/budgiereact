@@ -9,7 +9,6 @@ class Header extends Component {
     super(props);
 
     this.state = {
-      isActive: false,
       isExpanded: false
     }
   }
@@ -20,11 +19,6 @@ class Header extends Component {
         isExpanded: false
       });
     });
-  }
-
-  componentDidUpdate() {
-    console.log(this.props);
-    console.log(this.state);
   }
 
   toggleBurger = () => {
@@ -46,11 +40,11 @@ class Header extends Component {
             to="/">
             <strong>budgie</strong>
           </Link>
-          <a onClick={() => this.toggleBurger()} role="button" className={burgerClass} aria-label="menu" aria-expanded={isExpanded} data-target="navbar">
+          <button onClick={() => this.toggleBurger()} className={burgerClass} aria-label="menu" aria-expanded={isExpanded} data-target="navbar">
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
-          </a>
+          </button>
         </div>
         <div id="navbar" className={navbarClass}>
           {renderAppActions(this.props)}

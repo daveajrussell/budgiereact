@@ -19,12 +19,12 @@ export class CollapsibleDiv extends Component {
         const { title, children } = this.props;
         return (
             <main>
-                <a onClick={() => this.toggleTable(isCollapsed)} className="has-text-black">
+                <span onClick={() => this.toggleTable(isCollapsed)} className="has-text-black">
                     <h4 className={isCollapsed ? "is-marginless" : ""}>
                         {title}
                         <FontAwesomeIcon icon={isCollapsed ? faAngleUp : faAngleDown} pull="right" />
                     </h4>
-                </a>
+                </span>
                 <div className={isCollapsed ? 'is-hidden' : ''}>
                     {children}
                 </div>
