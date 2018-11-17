@@ -17,6 +17,9 @@ export default function reducer(state, action) {
             outgoings: action.budget.outgoings,
             transactions: action.budget.transactions,
             categories: action.budget.categories,
+            totalBudgeted: action.budget.totalBudgeted,
+            totalActuals: action.budget.totalActuals,
+            totalRemaining: action.budget.totalBudgeted - action.budget.totalActuals,
             loading: false
         }
     }
@@ -29,6 +32,16 @@ export default function reducer(state, action) {
     }
 
     if (action.type === types.receiveNewTransactionType) {
+        const totalBudgeted = state.outgoings.reduce((accumulator, outgoing) => {
+            return accumulator + outgoing.budgeted;
+        }, 0);
+
+        let totalActuals = state.transactions.reduce((accumulator, transaction) => {
+            return accumulator + transaction.amount;
+        }, 0);
+
+        totalActuals += action.transaction.amount;
+
         return {
             ...state,
             transactions: [...state.transactions, action.transaction],
@@ -45,6 +58,9 @@ export default function reducer(state, action) {
                     remaining: item.budgeted - actual
                 }
             }),
+            totalBudgeted: totalBudgeted,
+            totalActuals: totalActuals,
+            totalRemaining: totalBudgeted - totalActuals,
             loading: false
         }
     }
@@ -62,6 +78,18 @@ export default function reducer(state, action) {
             }
 
             return accumulator;
+        }, 0);
+
+        const totalBudgeted = state.outgoings.reduce((accumulator, outgoing) => {
+            return accumulator + outgoing.budgeted;
+        }, 0);
+
+        const totalActuals = state.transactions.reduce((accumulator, transaction) => {
+            if (transaction.id !== action.transaction.id && transaction.category.id === action.transaction.category.id) {
+                return accumulator + transaction.amount;
+            }
+
+            return accumulator + action.transaction.amount;
         }, 0);
 
         return {
@@ -90,7 +118,10 @@ export default function reducer(state, action) {
                     date: action.transaction.date,
                     category: action.transaction.category
                 }
-            })
+            }),
+            totalBudgeted: totalBudgeted,
+            totalActuals: totalActuals,
+            totalRemaining: totalBudgeted - totalActuals
         }
     }
 
@@ -109,6 +140,18 @@ export default function reducer(state, action) {
             return accumulator;
         }, 0);
 
+        const totalBudgeted = state.outgoings.reduce((accumulator, outgoing) => {
+            return accumulator + outgoing.budgeted;
+        }, 0);
+
+        const totalActuals = state.transactions.reduce((accumulator, transaction) => {
+            if (transaction.id !== action.transaction.id && transaction.category.id === action.transaction.category.id) {
+                return accumulator + transaction.amount;
+            }
+
+            return accumulator - action.transaction.amount;
+        }, 0);
+
         return {
             ...state,
             outgoings: state.outgoings.map((item) => {
@@ -124,7 +167,10 @@ export default function reducer(state, action) {
                     remaining: item.budgeted - actual
                 }
             }),
-            transactions: state.transactions.filter(transaction => transaction.id !== action.transaction.id)
+            transactions: state.transactions.filter(transaction => transaction.id !== action.transaction.id),
+            totalBudgeted: totalBudgeted,
+            totalActuals: totalActuals,
+            totalRemaining: totalBudgeted - totalActuals
         }
     }
 
@@ -142,6 +188,17 @@ export default function reducer(state, action) {
     }
 
     if (action.type === types.receiveEditOutgoingType) {
+        const totalBudgeted = state.outgoings.reduce((accumulator, outgoing) => {
+            if (outgoing.id !== action.outgoing.id) {
+                return accumulator + outgoing.budgeted;
+            }
+            return accumulator + action.outgoing.budgeted;
+        }, 0);
+
+        const totalActuals = state.outgoings.reduce((accumulator, outgoing) => {
+            return accumulator + outgoing.actual;
+        }, 0);
+
         return {
             ...state,
             outgoings: state.outgoings.map((item) => {
@@ -156,7 +213,9 @@ export default function reducer(state, action) {
                     budgeted: budgeted,
                     remaining: budgeted - item.actual
                 }
-            })
+            }),
+            totalBudgeted: totalBudgeted,
+            totalRemaining: totalBudgeted - totalActuals
         }
     }
 

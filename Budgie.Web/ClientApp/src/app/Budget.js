@@ -144,7 +144,7 @@ class Budget extends Component {
     }
 
     renderOutgoings() {
-        const { outgoings } = this.props;
+        const { outgoings, totalBudgeted, totalActuals, totalRemaining } = this.props;
         return (
             <div className="tile is-4 is-vertical is-parent">
                 <div className="tile is-child box">
@@ -191,6 +191,38 @@ class Budget extends Component {
                                 </table>
                             )
                         })}
+                    </CollapsibleDiv>
+                </div>
+                <div className="tile is-child box">
+                    <CollapsibleDiv title="Totals">
+                        <table className="table is-striped">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        Budgeted
+                                    </td>
+                                    <td>
+                                        {accounting.formatMoney(totalBudgeted)}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Actual
+                                    </td>
+                                    <td>
+                                        {accounting.formatMoney(totalActuals)}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Remaining
+                                    </td>
+                                    <td className={totalRemaining < 0 ? 'has-text-danger' : 'has-text-success'}>
+                                        {accounting.formatMoney(totalRemaining)}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </CollapsibleDiv>
                 </div>
             </div>

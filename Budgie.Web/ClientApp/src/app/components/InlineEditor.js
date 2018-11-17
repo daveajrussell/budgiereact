@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import accounting from 'accounting';
+import * as KeyCode from 'keycode-js';
 
 export class InlineEditor extends Component {
     constructor(props) {
@@ -34,12 +35,32 @@ export class InlineEditor extends Component {
         this.setState({ [name]: value });
     }
 
+    handleKeyUp(e) {
+        switch (e.keyCode) {
+            case KeyCode.KEY_ESCAPE:
+                this.toggleEditor();
+                break;
+            case KeyCode.KEY_RETURN:
+            case KeyCode.KEY_ENTER:
+                this.saveChanges();
+                break;
+        }
+    }
+
     render() {
         const { isEditing, value } = this.state;
 
         if (isEditing) {
             return (
-                <input autoFocus type="text" name="value" className="input" value={value} onChange={(e) => this.handleChange(e)} onBlur={() => this.saveChanges()} />
+                <input autoFocus
+                    onFocus={(e) => e.target.select()}
+                    type="text"
+                    name="value"
+                    className="input"
+                    value={value}
+                    onChange={(e) => this.handleChange(e)}
+                    onBlur={() => this.saveChanges()}
+                    onKeyUp={(e) => this.handleKeyUp(e)} />
             );
         } else {
             return (
