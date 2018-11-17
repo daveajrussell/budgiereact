@@ -20,11 +20,11 @@ function getAllCategories() {
         .then(categories => categories);
 }
 
-function createNewCategory(name, type) {
+function createNewCategory(category) {
     const requestOptions = {
         method: 'PUT',
         headers: authHeader(),
-        body: JSON.stringify({ name, type })
+        body: JSON.stringify(category)
     };
 
     return fetch(config.apiUrl + '/api/categories', requestOptions)
@@ -42,11 +42,11 @@ function deleteCategory(category) {
         .then(handleResponse, handleError);
 }
 
-function editCategory(id, name, type) {
+function editCategory(category) {
     const requestOptions = {
         method: 'PATCH',
         headers: authHeader(),
-        body: JSON.stringify({ id, name, type })
+        body: JSON.stringify(category)
     };
 
     return fetch(config.apiUrl + '/api/categories/edit', requestOptions)

@@ -29,10 +29,6 @@ export default function reducer(state, action) {
     if (action.type === types.requestNewCategoryType) {
         return {
             ...state,
-            category: {
-                name: action.categoryName,
-                type: action.categoryType,
-            },
             loading: true
         };
     }
@@ -67,7 +63,19 @@ export default function reducer(state, action) {
             ...state,
             loading: false,
             success: true,
-            items: state.items.map(item => item.id === action.category.id ? { ...item, editing: false, name: action.category.name, type: action.category.type } : item)
+            items: state.items.map((item) => {
+                if (item.id === action.category.id) {
+                    return {
+                        ...item,
+                        name: action.category.name,
+                        type: action.category.type,
+                        colourHex: action.category.colourHex,
+                        editing: false
+                    }
+                }
+
+                return item;
+            })
         }
     }
 

@@ -44,6 +44,8 @@ export class InlineEditor extends Component {
             case KeyCode.KEY_ENTER:
                 this.saveChanges();
                 break;
+            default:
+                break;
         }
     }
 
@@ -52,7 +54,8 @@ export class InlineEditor extends Component {
 
         if (isEditing) {
             return (
-                <input autoFocus
+                <input
+                    autoFocus
                     onFocus={(e) => e.target.select()}
                     type="text"
                     name="value"

@@ -9,3 +9,12 @@ body {
     line-height: 1.5;
     height: 100%;
 }
+
+.color-picker {
+    border-radius: 2px;
+    box-shadow: 0 2px 3px 0 rgba(0, 0, 0, .1), inset 0 0 0 1px rgba(0, 0, 0, .1);
+    float: left;
+    height: 24px;
+    margin-right: 8px;
+    width: 24px;
+}

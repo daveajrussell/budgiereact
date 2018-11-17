@@ -10,6 +10,8 @@ namespace Budgie.Core
 
         public CategoryType Type { get; set; }
 
+        public string ColourHex { get; set; }
+
         public int UserId { get; set; }
 
         public virtual User User { get; set; }

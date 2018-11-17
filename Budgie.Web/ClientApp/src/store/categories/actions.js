@@ -17,11 +17,11 @@ export const actionCreators = {
             });
     },
 
-    createNewCategory: (categoryName, categoryType) => (dispatch) => {
-        dispatch({ type: types.requestNewCategoryType, categoryName: categoryName, categoryType: categoryType });
+    createNewCategory: (category) => (dispatch) => {
+        dispatch({ type: types.requestNewCategoryType });
 
         categoryService
-            .createNewCategory(categoryName, categoryType)
+            .createNewCategory(category)
             .then((category) => {
                 dispatch({ type: types.receiveNewCategoryType, category: category });
             })
@@ -37,20 +37,20 @@ export const actionCreators = {
         categoryService
             .deleteCategory(category)
             .then(() => {
-                dispatch({ type: types.receiveDeleteCategoryType, category });
+                dispatch({ type: types.receiveDeleteCategoryType, category: category });
             })
             .catch((error) => {
                 console.log(error);
             });
     },
 
-    editCategory: (id, name, type) => (dispatch) => {
-        dispatch({ type: types.requestEditCategoryType, id });
+    editCategory: (category) => (dispatch) => {
+        dispatch({ type: types.requestEditCategoryType });
 
         categoryService
-            .editCategory(id, name, type)
+            .editCategory(category)
             .then((category) => {
-                dispatch({ type: types.receiveEditCategoryType, category });
+                dispatch({ type: types.receiveEditCategoryType, category: category });
             })
             .catch((error) => {
                 console.log(error);

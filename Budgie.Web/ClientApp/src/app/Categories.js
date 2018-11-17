@@ -20,6 +20,7 @@ class Categories extends Component {
             id: 0,
             name: '',
             type: '',
+            colourHex: '#ffffff',
             submitted: false,
             valid: false,
             show: false,
@@ -40,7 +41,8 @@ class Categories extends Component {
                 mode: modes.edit,
                 id: item.id,
                 name: item.name,
-                type: item.type
+                type: item.type,
+                colourHex: item.colourHex || '#ffffff'
             });
         } else {
             this.setState({
@@ -48,7 +50,8 @@ class Categories extends Component {
                 show: true,
                 mode: modes.new,
                 name: '',
-                type: ''
+                type: '',
+                colourHex: '#ffffff',
             });
         }
     };
@@ -59,7 +62,8 @@ class Categories extends Component {
             show: false,
             id: 0,
             name: '',
-            type: ''
+            type: '',
+            colourHex: '#ffffff',
         });
     };
 
@@ -78,7 +82,7 @@ class Categories extends Component {
     }
 
     handleSave() {
-        const { mode, id, name, type } = this.state;
+        const { mode, id, name, type, colourHex } = this.state;
 
         if (name && type) {
             this.setState({
@@ -86,10 +90,17 @@ class Categories extends Component {
                 valid: true
             });
 
+            const category = {
+                id: id,
+                name: name,
+                type: type,
+                colourHex: colourHex
+            }
+
             if (mode === modes.new) {
-                this.props.createNewCategory(name, type);
+                this.props.createNewCategory(category);
             } else if (mode === modes.edit) {
-                this.props.editCategory(id, name, type);
+                this.props.editCategory(category);
             }
         } else {
             this.setState({
@@ -105,7 +116,7 @@ class Categories extends Component {
 
     render() {
         const { items, loading } = this.props.categories;
-        const { mode, type, name, valid, submitted } = this.state;
+        const { mode, type, name, colourHex, valid, submitted } = this.state;
         return (
             <main>
                 <h3>
@@ -126,6 +137,7 @@ class Categories extends Component {
                                             <tr>
                                                 <th>Name</th>
                                                 <th>Type</th>
+                                                <th>Colour</th>
                                                 <th></th>
                                             </tr>
                                         </thead>
@@ -134,6 +146,10 @@ class Categories extends Component {
                                                 <tr key={item.id}>
                                                     <td>{item.name}</td>
                                                     <td>{types[item.type]}</td>
+                                                    <td>
+                                                        <span className="color-picker" style={{ backgroundColor: item.colourHex }}>
+                                                        </span>
+                                                    </td>
                                                     <td>
                                                         <div className="field is-grouped is-pulled-right">
                                                             <p className="control">
@@ -177,6 +193,17 @@ class Categories extends Component {
                                 This field is required
                             </p>
                         }
+                    </div>
+                    <div className="field">
+                        <label className="label">Colour</label>
+                        <div className="control">
+                            <input className="input"
+                                name="colourHex"
+                                value={colourHex}
+                                type="color"
+                                placeholder="The colour for your category"
+                                onChange={(e) => this.handleChange(e)} />
+                        </div>
                     </div>
                     <div className="field">
                         <label className="label">Type</label>

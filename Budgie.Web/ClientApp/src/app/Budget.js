@@ -154,7 +154,7 @@ class Budget extends Component {
                                 <table key={outgoing.id} className="table is-striped">
                                     <thead>
                                         <tr>
-                                            <th colSpan="3">
+                                            <th colSpan="3" style={{ backgroundColor: outgoing.category.colourHex }}>
                                                 {outgoing.category.name}
                                             </th>
                                         </tr>
@@ -251,7 +251,7 @@ class Budget extends Component {
 
         return (
             transactions.map((transaction) =>
-                <tr key={transaction.id}>
+                <tr key={transaction.id} style={{ backgroundColor: transaction.category.colourHex }}>
                     <td>{moment(transaction.date, 'YYYY-MM-DDT00:00:00').format('DD/MM/YYYY')}</td>
                     <td>{this.getCategory(transaction)}</td>
                     <td>
@@ -276,7 +276,7 @@ class Budget extends Component {
         if (transactions) {
             return (
                 <div>
-                    <table>
+                    <table className="table">
                         <thead>
                             <tr>
                                 <th>Date</th>

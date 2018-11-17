@@ -41,6 +41,7 @@ namespace Budgie.Api.Controllers
                 UserId = Token.UserId,
                 Name = model.Name,
                 Type = model.Type,
+                ColourHex = model.ColourHex,
                 DateAdded = DateTime.UtcNow
             };
 
@@ -60,6 +61,7 @@ namespace Budgie.Api.Controllers
 
             category.Name = model.Name;
             category.Type = model.Type;
+            category.ColourHex = model.ColourHex;
             category.DateModified = DateTime.UtcNow;
 
             _uow.Categories.Update(category);

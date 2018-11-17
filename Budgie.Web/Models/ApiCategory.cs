@@ -12,5 +12,8 @@ public class ApiCategory
     public string Name { get; set; }
 
     [DataMember]
+    public string ColourHex { get; set; }
+
+    [DataMember]
     public CategoryType Type { get; set; }
 }
