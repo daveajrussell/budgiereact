@@ -23,6 +23,9 @@ namespace Budgie.Api.Models
         public decimal TotalActuals { get; set; }
 
         [DataMember]
+        public decimal IncomeVsExpenditure { get; set; }
+
+        [DataMember]
         public IEnumerable<ApiOutgoing> Outgoings { get; set; }
 
         [DataMember]

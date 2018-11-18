@@ -144,7 +144,7 @@ class Budget extends Component {
     }
 
     renderIncomesAndOutgoings() {
-        const { outgoings, incomes, totalBudgeted, totalActuals, totalRemaining } = this.props;
+        const { outgoings, incomes, incomeVsExpenditure, totalBudgeted, totalActuals, totalRemaining } = this.props;
         return (
             <div className="tile is-4 is-vertical is-parent">
                 <div className="tile is-child box">
@@ -246,6 +246,14 @@ class Budget extends Component {
                                     </td>
                                     <td className={totalRemaining < 0 ? 'has-text-danger' : 'has-text-success'}>
                                         {accounting.formatMoney(totalRemaining)}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Income vs. Expenditure
+                                    </td>
+                                    <td className={incomeVsExpenditure < 0 ? 'has-text-danger' : 'has-text-success'}>
+                                        {accounting.formatMoney(incomeVsExpenditure)}
                                     </td>
                                 </tr>
                             </tbody>

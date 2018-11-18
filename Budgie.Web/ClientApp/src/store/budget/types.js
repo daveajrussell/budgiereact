@@ -15,3 +15,5 @@ export const requestEditOutgoingType = 'REQUEST_EDIT_OUTGOING';
 export const receiveEditOutgoingType = 'RECEIVE_EDIT_OUTGOING';
 
 export const transactionFailureType = 'TRANSACTION_FAILURE';
+
+export const recalculateBudgetType = 'RECALCULATE_BUDGET';

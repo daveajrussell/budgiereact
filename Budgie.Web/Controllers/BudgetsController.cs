@@ -266,7 +266,15 @@ namespace Budgie.Api.Controllers
                 if (income != null)
                 {
                     income.DateModified = DateTime.UtcNow;
-                    income.Actual = model.Amount;
+
+                    if (delta == 0)
+                    {
+                        income.Actual += model.Amount;
+                    }
+                    else
+                    {
+                        income.Actual -= delta;
+                    }
 
                     _uow.Incomes.Update(income);
                 }

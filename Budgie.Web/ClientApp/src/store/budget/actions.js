@@ -23,6 +23,7 @@ export const actionCreators = {
             .addTransaction(transaction)
             .then((transaction) => {
                 dispatch({ type: types.receiveNewTransactionType, transaction: transaction });
+                dispatch({ type: types.recalculateBudgetType });
             })
             .catch((error) => {
                 console.log(error);
@@ -37,6 +38,7 @@ export const actionCreators = {
             .editTransaction(transaction)
             .then((transaction) => {
                 dispatch({ type: types.receiveEditTransactionType, transaction: transaction });
+                dispatch({ type: types.recalculateBudgetType });
             })
             .catch((error) => {
                 console.log(error);
@@ -51,6 +53,7 @@ export const actionCreators = {
             .deleteTransaction(transaction)
             .then((transaction) => {
                 dispatch({ type: types.receiveDeleteTransactionType, transaction: transaction });
+                dispatch({ type: types.recalculateBudgetType });
             })
             .catch((error) => {
                 console.log(error);
@@ -65,6 +68,7 @@ export const actionCreators = {
             .editOutgoing(outgoing)
             .then((outgoing) => {
                 dispatch({ type: types.receiveEditOutgoingType, outgoing: outgoing });
+                dispatch({ type: types.recalculateBudgetType });
             })
             .catch((error) => {
                 console.log(error);
