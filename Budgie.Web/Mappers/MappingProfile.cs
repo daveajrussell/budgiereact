@@ -1,17 +1,21 @@
 using AutoMapper;
+using Budgie.Api.Models;
 using Budgie.Core;
 using System.Linq;
 
-public class MappingProfile : Profile
+namespace Budgie.Api.Mappers
 {
-    public MappingProfile()
+    public class MappingProfile : Profile
     {
-        CreateMap<User, ApiUser>();
-        CreateMap<Category, ApiCategory>();
-        CreateMap<Outgoing, ApiOutgoing>();
-        CreateMap<Transaction, ApiTransaction>();
-        CreateMap<Budget, ApiBudget>()
-        .ForMember(dest => dest.TotalBudgeted, src => src.MapFrom(x => x.Outgoings.Sum(y => y.Budgeted)))
-        .ForMember(dest => dest.TotalActuals, src => src.MapFrom(x => x.Outgoings.Sum(y => y.Actual)));
+        public MappingProfile()
+        {
+            CreateMap<User, ApiUser>();
+            CreateMap<Category, ApiCategory>();
+            CreateMap<Outgoing, ApiOutgoing>();
+            CreateMap<Transaction, ApiTransaction>();
+            CreateMap<Budget, ApiBudget>()
+            .ForMember(dest => dest.TotalBudgeted, src => src.MapFrom(x => x.Outgoings.Sum(y => y.Budgeted)))
+            .ForMember(dest => dest.TotalActuals, src => src.MapFrom(x => x.Outgoings.Sum(y => y.Actual)));
+        }
     }
 }

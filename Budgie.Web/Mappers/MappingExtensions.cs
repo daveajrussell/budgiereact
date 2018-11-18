@@ -1,10 +1,13 @@
 using AutoMapper;
 
-public static class MappingExtensions
+namespace Budgie.Api.Mappers
 {
-    public static IMappingExpression<TSource, TDest> IgnoreAllUnmapped<TSource, TDest>(this IMappingExpression<TSource, TDest> expression)
+    public static class MappingExtensions
     {
-        expression.ForAllMembers(opt => opt.Ignore());
-        return expression;
+        public static IMappingExpression<TSource, TDest> IgnoreAllUnmapped<TSource, TDest>(this IMappingExpression<TSource, TDest> expression)
+        {
+            expression.ForAllMembers(opt => opt.Ignore());
+            return expression;
+        }
     }
 }

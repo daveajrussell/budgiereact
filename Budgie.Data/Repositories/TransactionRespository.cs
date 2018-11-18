@@ -14,12 +14,15 @@ public class TransactionRepository : EFRepository<Transaction>, ITransactionRepo
 
     public override IQueryable<Transaction> GetAll()
     {
-        return DbSet.Where(x => x.UserId == UserId);
+        return DbSet
+            .Where(x => x.UserId == UserId)
+            .Include(x => x.Category);
     }
 
     public override async Task<Transaction> GetByIdAsync(int id)
     {
-        return await DbSet.Where(x => x.UserId == UserId)
+        return await DbSet
+            .Where(x => x.UserId == UserId)
             .Where(x => x.Id == id)
             .FirstOrDefaultAsync();
     }

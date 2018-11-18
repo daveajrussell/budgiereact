@@ -10,7 +10,7 @@
     "ajv": "^6.5.5",
     "bulma": "^0.7.2",
     "bulma-calendar": "^5.0.3",
-    "chart.js": "^2.7.3",
+    "chart.js": "2.5.0",
     "history": "^4.7.2",
     "keycode-js": "^1.0.3",
     "moment": "^2.22.2",

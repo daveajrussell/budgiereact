@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Budgie.Core;
 using Budgie.Core.Constants;
@@ -39,26 +40,31 @@ namespace Budgie.Data.Helpers
                 userService.AddToRoleAsync(user, BudgieRoles.User);
             }
 
-            if (!context.Categories.Any())
+            var categories = new List<Category>()
             {
-                context.Categories.Add(new Category
+                new Category
                 {
                     Name = "Groceries",
                     UserId = 1,
                     Type = CategoryType.Outgoing,
                     DateAdded = DateTime.UtcNow,
-                    DateModified = DateTime.UtcNow
-                });
-
-                context.Categories.Add(new Category
+                    DateModified = DateTime.UtcNow,
+                    ColourHex = "#ffb500"
+                },
+                new Category
                 {
                     Name = "Gadgets",
                     UserId = 1,
                     Type = CategoryType.Outgoing,
                     DateAdded = DateTime.UtcNow,
-                    DateModified = DateTime.UtcNow
-                });
+                    DateModified = DateTime.UtcNow,
+                    ColourHex = "#b490ff"
+                }
+            };
 
+            if (!context.Categories.Any())
+            {
+                context.Categories.AddRange(categories);
                 context.SaveChanges();
             }
         }

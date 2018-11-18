@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using Budgie.Api.Models;
 using Budgie.Core;
 using Budgie.Core.Constants;
 using Budgie.Core.Contracts.Security;

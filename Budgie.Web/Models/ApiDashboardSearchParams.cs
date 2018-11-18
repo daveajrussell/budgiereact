@@ -1,9 +1,12 @@
 using System.Runtime.Serialization;
 using Budgie.Api.Enums;
 
-[DataContract]
-public class ApiDashboardSearchParams
+namespace Budgie.Api.Models
 {
-    [DataMember]
-    public DashboardRange Range { get; set; }
+    [DataContract]
+    public class ApiDashboardSearchParams
+    {
+        [DataMember]
+        public DashboardRange Range { get; set; }
+    }
 }
