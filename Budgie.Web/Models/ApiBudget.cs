@@ -26,6 +26,9 @@ namespace Budgie.Api.Models
         public IEnumerable<ApiOutgoing> Outgoings { get; set; }
 
         [DataMember]
+        public IEnumerable<ApiIncome> Incomes { get; set; }
+
+        [DataMember]
         public IEnumerable<ApiTransaction> Transactions { get; set; }
 
         [DataMember]

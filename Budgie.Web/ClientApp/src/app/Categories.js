@@ -5,7 +5,8 @@ import { actionCreators } from './../store/categories/actions';
 import { Modal } from './components';
 
 const types = {
-    1: 'Outgoing'
+    1: 'Outgoing',
+    2: 'Income'
 }
 
 const modes = {
@@ -213,6 +214,7 @@ class Categories extends Component {
                                 onChange={(e) => this.handleChange(e)}>
                                 <option value="">Please select</option>
                                 <option value="1">Outgoing</option>
+                                <option value="2">Income</option>
                             </select>
                         </div>
                         {

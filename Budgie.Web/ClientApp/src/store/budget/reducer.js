@@ -1,5 +1,9 @@
 import initialState from './initialState';
-import * as types from './types'
+import * as types from './types';
+
+function shouldCountTransaction(transaction) {
+    return transaction.category.type !== 2;
+}
 
 export default function reducer(state, action) {
     state = state || initialState;
@@ -15,6 +19,7 @@ export default function reducer(state, action) {
         return {
             ...state,
             outgoings: action.budget.outgoings,
+            incomes: action.budget.incomes,
             transactions: action.budget.transactions,
             categories: action.budget.categories,
             totalBudgeted: action.budget.totalBudgeted,
@@ -37,10 +42,16 @@ export default function reducer(state, action) {
         }, 0);
 
         let totalActuals = state.transactions.reduce((accumulator, transaction) => {
-            return accumulator + transaction.amount;
+            if (shouldCountTransaction(transaction)) {
+                return accumulator + transaction.amount;
+            }
+
+            return accumulator;
         }, 0);
 
-        totalActuals += action.transaction.amount;
+        if (action.transaction.category.type !== 2) {
+            totalActuals += action.transaction.amount;
+        }
 
         return {
             ...state,
@@ -58,6 +69,20 @@ export default function reducer(state, action) {
                     remaining: item.budgeted - actual
                 }
             }),
+            incomes: state.incomes.map((item) => {
+                if (item.category.id !== action.transaction.category.id) {
+                    return item;
+                }
+
+                debugger;
+
+                const actual = item.actual + action.transaction.amount;
+
+                return {
+                    ...item,
+                    actual: actual
+                }
+            }),
             totalBudgeted: totalBudgeted,
             totalActuals: totalActuals,
             totalRemaining: totalBudgeted - totalActuals,
@@ -72,9 +97,9 @@ export default function reducer(state, action) {
     }
 
     if (action.type === types.receiveEditTransactionType) {
-        const accumulated = state.transactions.reduce((accumulator, currentValue) => {
-            if (currentValue.id !== action.transaction.id && currentValue.category.id === action.transaction.category.id) {
-                return accumulator + currentValue.amount;
+        const accumulated = state.transactions.reduce((accumulator, transaction) => {
+            if (shouldCountTransaction(transaction) && transaction.id !== action.transaction.id && transaction.category.id === action.transaction.category.id) {
+                return accumulator + transaction.amount;
             }
 
             return accumulator;
@@ -85,11 +110,15 @@ export default function reducer(state, action) {
         }, 0);
 
         const totalActuals = state.transactions.reduce((accumulator, transaction) => {
-            if (transaction.id !== action.transaction.id && transaction.category.id === action.transaction.category.id) {
+            if (shouldCountTransaction(transaction) && transaction.id !== action.transaction.id && transaction.category.id === action.transaction.category.id) {
                 return accumulator + transaction.amount;
             }
 
-            return accumulator + action.transaction.amount;
+            if (shouldCountTransaction(transaction)) {
+                return accumulator + action.transaction.amount;
+            }
+
+            return accumulator;
         }, 0);
 
         return {
@@ -105,6 +134,18 @@ export default function reducer(state, action) {
                     ...item,
                     actual: actual,
                     remaining: item.budgeted - actual
+                }
+            }),
+            incomes: state.incomes.map((item) => {
+                if (item.category.id !== action.transaction.category.id) {
+                    return item;
+                }
+
+                const actual = item.actual + action.transaction.amount;
+
+                return {
+                    ...item,
+                    actual: actual
                 }
             }),
             transactions: state.transactions.map((item) => {
@@ -133,9 +174,9 @@ export default function reducer(state, action) {
     }
 
     if (action.type === types.receiveDeleteTransactionType) {
-        const accumulated = state.transactions.reduce((accumulator, currentValue) => {
-            if (currentValue.id !== action.transaction.id && currentValue.category.id === action.transaction.category.id) {
-                return accumulator + currentValue.amount;
+        const accumulated = state.transactions.reduce((accumulator, transaction) => {
+            if (shouldCountTransaction(transaction) && transaction.id !== action.transaction.id && transaction.category.id === action.transaction.category.id) {
+                return accumulator + transaction.amount;
             }
             return accumulator;
         }, 0);
@@ -145,7 +186,7 @@ export default function reducer(state, action) {
         }, 0);
 
         const totalActuals = state.transactions.reduce((accumulator, transaction) => {
-            if (transaction.id !== action.transaction.id && transaction.category.id === action.transaction.category.id) {
+            if (shouldCountTransaction(transaction) && transaction.id !== action.transaction.id && transaction.category.id === action.transaction.category.id) {
                 return accumulator + transaction.amount;
             }
 
@@ -165,6 +206,18 @@ export default function reducer(state, action) {
                     ...item,
                     actual: accumulated,
                     remaining: item.budgeted - actual
+                }
+            }),
+            incomes: state.incomes.map((item) => {
+                if (item.category.id !== action.transaction.category.id) {
+                    return item;
+                }
+
+                const actual = item.actual + action.transaction.amount;
+
+                return {
+                    ...item,
+                    actual: actual
                 }
             }),
             transactions: state.transactions.filter(transaction => transaction.id !== action.transaction.id),
@@ -212,6 +265,18 @@ export default function reducer(state, action) {
                     ...item,
                     budgeted: budgeted,
                     remaining: budgeted - item.actual
+                }
+            }),
+            incomes: state.incomes.map((item) => {
+                if (item.category.id !== action.transaction.category.id) {
+                    return item;
+                }
+
+                const actual = item.actual + action.transaction.amount;
+
+                return {
+                    ...item,
+                    actual: actual
                 }
             }),
             totalBudgeted: totalBudgeted,

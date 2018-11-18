@@ -60,6 +60,7 @@ namespace Budgie.Api.Controllers
 
             var transactions = _uow.Transactions.GetAll()
             .Where(t => t.UserId == Token.UserId)
+            .Where(t => t.Category.Type != CategoryType.Income)
             .Where(t => t.Date >= from)
             .Where(t => t.Date <= now)
             .GroupBy(t => t.CategoryId)

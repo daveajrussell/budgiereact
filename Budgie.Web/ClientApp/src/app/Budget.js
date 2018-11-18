@@ -112,7 +112,7 @@ class Budget extends Component {
     renderBudget() {
         return (
             <div className="tile is-ancestor">
-                {this.renderOutgoings()}
+                {this.renderIncomesAndOutgoings()}
                 {this.renderExpenses()}
             </div>
         )
@@ -143,10 +143,37 @@ class Budget extends Component {
         this.props.deleteTransaction(transaction);
     }
 
-    renderOutgoings() {
-        const { outgoings, totalBudgeted, totalActuals, totalRemaining } = this.props;
+    renderIncomesAndOutgoings() {
+        const { outgoings, incomes, totalBudgeted, totalActuals, totalRemaining } = this.props;
         return (
             <div className="tile is-4 is-vertical is-parent">
+                <div className="tile is-child box">
+                    <CollapsibleDiv title="Incomes">
+                        {incomes.map((income) => {
+                            return (
+                                <table key={income.id} className="table is-striped">
+                                    <thead>
+                                        <tr>
+                                            <th colSpan="3" style={{ backgroundColor: income.category.colourHex }}>
+                                                {income.category.name}
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                Income
+                                            </td>
+                                            <td>
+                                                {accounting.formatMoney(income.actual)}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            )
+                        })}
+                    </CollapsibleDiv>
+                </div>
                 <div className="tile is-child box">
                     <CollapsibleDiv title="Outgoings">
                         {outgoings.map((outgoing) => {

@@ -16,6 +16,7 @@ public class BudgetRepository : EFRepository<Budget>, IBudgetRepository
     {
         return await DbSet
             .Include(x => x.Outgoings).ThenInclude(y => y.Category)
+            .Include(x => x.Incomes).ThenInclude(y => y.Category)
             .Include(x => x.Transactions)
             .Where(x => x.UserId == UserId)
             .Where(x => x.Year == year)

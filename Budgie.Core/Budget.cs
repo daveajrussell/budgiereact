@@ -13,7 +13,7 @@ namespace Budgie.Core
         public virtual User User { get; set; }
 
         public virtual ICollection<Outgoing> Outgoings { get; set; } = new List<Outgoing>();
-
+        public virtual ICollection<Income> Incomes { get; set; } = new List<Income>();
         public virtual ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
     }
 }

@@ -12,6 +12,7 @@ namespace Budgie.Api.Mappers
             CreateMap<User, ApiUser>();
             CreateMap<Category, ApiCategory>();
             CreateMap<Outgoing, ApiOutgoing>();
+            CreateMap<Income, ApiIncome>();
             CreateMap<Transaction, ApiTransaction>();
             CreateMap<Budget, ApiBudget>()
             .ForMember(dest => dest.TotalBudgeted, src => src.MapFrom(x => x.Outgoings.Sum(y => y.Budgeted)))

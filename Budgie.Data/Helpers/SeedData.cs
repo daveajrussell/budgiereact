@@ -59,6 +59,15 @@ namespace Budgie.Data.Helpers
                     DateAdded = DateTime.UtcNow,
                     DateModified = DateTime.UtcNow,
                     ColourHex = "#b490ff"
+                },
+                new Category
+                {
+                    Name = "Salary",
+                    UserId = 1,
+                    Type = CategoryType.Income,
+                    DateAdded = DateTime.UtcNow,
+                    DateModified = DateTime.UtcNow,
+                    ColourHex = "#34c4f9"
                 }
             };
 

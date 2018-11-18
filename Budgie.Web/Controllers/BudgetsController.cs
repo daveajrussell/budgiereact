@@ -58,23 +58,39 @@ namespace Budgie.Api.Controllers
                     })
                     .ToList();
 
+                var incomes = categories
+                .Where(x => x.Type == CategoryType.Income)
+                .Select(x => new Income
+                {
+                    BudgetId = budget.Id,
+                    UserId = Token.UserId,
+                    DateAdded = DateTime.UtcNow,
+                    CategoryId = x.Id
+                })
+                .ToList();
+
                 await _uow.Outgoings.AddRangeAsync(outgoings);
+                await _uow.Incomes.AddRangeAsync(incomes);
 
                 budget.Outgoings = outgoings;
+                budget.Incomes = incomes;
 
                 await _uow.Budgets.AddAsync(budget);
                 await _uow.CommitAsync();
             }
 
-            var outgoingCatIds = budget.Outgoings.Select(x => x.CategoryId).ToArray();
-            var catIds = categories.Where(x => x.Type == CategoryType.Outgoing).Select(x => x.Id).ToArray();
+            var budgetOutgoingCatIds = budget.Outgoings.Select(x => x.CategoryId).ToArray();
+            var budgetIncomeCatdIds = budget.Incomes.Select(X => X.CategoryId).ToArray();
+            var outgoingCatIds = categories.Where(x => x.Type == CategoryType.Outgoing).Select(x => x.Id).ToArray();
+            var incomeCatIds = categories.Where(x => x.Type == CategoryType.Income).Select(x => x.Id).ToArray();
 
-            var missingKeys = catIds.Where(x => !outgoingCatIds.Contains(x)).Select(x => x);
+            var missingOutgoingKeys = outgoingCatIds.Where(x => !budgetOutgoingCatIds.Contains(x)).Select(x => x);
+            var missingIncomeKeys = incomeCatIds.Where(x => !budgetIncomeCatdIds.Contains(x)).Select(x => x);
 
-            if (missingKeys.Any())
+            if (missingOutgoingKeys.Any())
             {
                 var outgoings = categories
-                    .Where(x => missingKeys.Contains(x.Id))
+                    .Where(x => missingOutgoingKeys.Contains(x.Id))
                     .Select(x => new Outgoing
                     {
                         BudgetId = budget.Id,
@@ -86,6 +102,24 @@ namespace Budgie.Api.Controllers
 
                 await _uow.Outgoings.AddRangeAsync(outgoings);
                 budget.Outgoings.Concat(outgoings);
+                await _uow.CommitAsync();
+            }
+
+            if (missingIncomeKeys.Any())
+            {
+                var incomes = categories
+                    .Where(x => missingIncomeKeys.Contains(x.Id))
+                    .Select(x => new Income
+                    {
+                        BudgetId = budget.Id,
+                        UserId = Token.UserId,
+                        DateAdded = DateTime.UtcNow,
+                        CategoryId = x.Id
+                    })
+                    .ToList();
+
+                await _uow.Incomes.AddRangeAsync(incomes);
+                budget.Incomes.Concat(incomes);
                 await _uow.CommitAsync();
             }
 
@@ -219,6 +253,22 @@ namespace Budgie.Api.Controllers
                     }
 
                     _uow.Outgoings.Update(outgoing);
+                }
+            }
+
+            if (category.Type == CategoryType.Income)
+            {
+                var income = _uow.Incomes.GetAll()
+                .Where(x => x.BudgetId == model.BudgetId)
+                .Where(x => x.CategoryId == model.Category.Id)
+                .FirstOrDefault();
+
+                if (income != null)
+                {
+                    income.DateModified = DateTime.UtcNow;
+                    income.Actual = model.Amount;
+
+                    _uow.Incomes.Update(income);
                 }
             }
         }

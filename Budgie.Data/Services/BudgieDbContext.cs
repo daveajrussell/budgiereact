@@ -12,6 +12,7 @@ namespace Budgie.Data.Services
         public DbSet<Category> Categories { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
         public DbSet<Outgoing> Outgoings { get; set; }
+        public DbSet<Income> Incomes { get; set; }
 
         public BudgieDbContext(DbContextOptions<BudgieDbContext> options)
             : base(options)

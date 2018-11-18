@@ -1,5 +1,6 @@
 export default {
     outgoings: [],
+    incomes: [],
     transactions: [],
     categories: [],
     totalBudgeted: 0,

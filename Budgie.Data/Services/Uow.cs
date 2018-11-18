@@ -22,6 +22,7 @@ namespace Budgie.Data.Services
         public ICategoryRepository Categories => GetRepo<ICategoryRepository>();
         public ITransactionRepository Transactions => GetRepo<ITransactionRepository>();
         public IRepository<Outgoing> Outgoings => GetStandardRepo<Outgoing>();
+        public IRepository<Income> Incomes => GetStandardRepo<Income>();
 
         public Uow(IRepositoryProvider repositoryProvider, BudgieDbContext budgieDbContext, IHttpContextAccessor httpContextAccessor)
         {

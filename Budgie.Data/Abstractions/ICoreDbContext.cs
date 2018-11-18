@@ -9,6 +9,7 @@ namespace Budgie.Data.Abstractions
         DbSet<User> Users { get; set; }
         DbSet<Budget> Budgets { get; set; }
         DbSet<Outgoing> Outgoings { get; set; }
+        DbSet<Income> Incomes { get; set; }
         DbSet<Category> Categories { get; set; }
         DbSet<Transaction> Transactions { get; set; }
         DbSet<Role> Roles { get; set; }
