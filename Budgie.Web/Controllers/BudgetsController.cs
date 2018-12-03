@@ -32,35 +32,90 @@ namespace Budgie.Api.Controllers
         {
             var budget = await _uow.Budgets.GetBudget(year, month);
 
-            var categories = _uow.Categories
+            if (budget != null)
+            {
+                var categories = _uow.Categories
                     .GetAll()
                     .Where(x => x.UserId == Token.UserId)
                     .ToList();
 
-            if (budget == null)
-            {
-                budget = new Budget
+                var budgetOutgoingCatIds = budget.Outgoings.Select(x => x.CategoryId).ToArray();
+                var budgetIncomeCatdIds = budget.Incomes.Select(X => X.CategoryId).ToArray();
+                var outgoingCatIds = categories.Where(x => x.Type == CategoryType.Outgoing).Select(x => x.Id).ToArray();
+                var incomeCatIds = categories.Where(x => x.Type == CategoryType.Income).Select(x => x.Id).ToArray();
+
+                var missingOutgoingKeys = outgoingCatIds.Where(x => !budgetOutgoingCatIds.Contains(x)).Select(x => x);
+                var missingIncomeKeys = incomeCatIds.Where(x => !budgetIncomeCatdIds.Contains(x)).Select(x => x);
+
+                if (missingOutgoingKeys.Any())
                 {
-                    UserId = Token.UserId,
-                    Year = year,
-                    Month = month,
-                    DateAdded = DateTime.UtcNow
-                };
+                    var outgoings = categories
+                        .Where(x => missingOutgoingKeys.Contains(x.Id))
+                        .Select(x => new Outgoing
+                        {
+                            BudgetId = budget.Id,
+                            UserId = Token.UserId,
+                            DateAdded = DateTime.UtcNow,
+                            CategoryId = x.Id
+                        })
+                        .ToList();
 
-                var outgoings = categories
-                    .Where(x => x.Type == CategoryType.Outgoing)
-                    .Select(x => new Outgoing
-                    {
-                        BudgetId = budget.Id,
-                        UserId = Token.UserId,
-                        DateAdded = DateTime.UtcNow,
-                        CategoryId = x.Id
-                    })
-                    .ToList();
+                    await _uow.Outgoings.AddRangeAsync(outgoings);
+                    budget.Outgoings.Concat(outgoings);
+                    await _uow.CommitAsync();
+                }
 
-                var incomes = categories
-                .Where(x => x.Type == CategoryType.Income)
-                .Select(x => new Income
+                if (missingIncomeKeys.Any())
+                {
+                    var incomes = categories
+                        .Where(x => missingIncomeKeys.Contains(x.Id))
+                        .Select(x => new Income
+                        {
+                            BudgetId = budget.Id,
+                            UserId = Token.UserId,
+                            DateAdded = DateTime.UtcNow,
+                            CategoryId = x.Id
+                        })
+                        .ToList();
+
+                    await _uow.Incomes.AddRangeAsync(incomes);
+                    budget.Incomes.Concat(incomes);
+                    await _uow.CommitAsync();
+                }
+
+                var apiBudget = _mapper.Map<Budget, ApiBudget>(budget);
+                var apiCategories = _mapper.Map<IEnumerable<Category>, IEnumerable<ApiCategory>>(categories);
+
+                apiBudget.Categories = apiCategories;
+
+                return new JsonResult(apiBudget);
+            }
+            else
+            {
+                return new NotFoundResult();
+            }
+        }
+
+        [HttpPut]
+        [Route("{year:int}/{month:int}")]
+        public async Task<IActionResult> AddBudget(int year, int month)
+        {
+            var categories = _uow.Categories
+                .GetAll()
+                .Where(x => x.UserId == Token.UserId)
+                .ToList();
+
+            var budget = new Budget
+            {
+                UserId = Token.UserId,
+                Year = year,
+                Month = month,
+                DateAdded = DateTime.UtcNow
+            };
+
+            var outgoings = categories
+                .Where(x => x.Type == CategoryType.Outgoing)
+                .Select(x => new Outgoing
                 {
                     BudgetId = budget.Id,
                     UserId = Token.UserId,
@@ -69,64 +124,27 @@ namespace Budgie.Api.Controllers
                 })
                 .ToList();
 
-                await _uow.Outgoings.AddRangeAsync(outgoings);
-                await _uow.Incomes.AddRangeAsync(incomes);
-
-                budget.Outgoings = outgoings;
-                budget.Incomes = incomes;
-
-                await _uow.Budgets.AddAsync(budget);
-                await _uow.CommitAsync();
-            }
-
-            var budgetOutgoingCatIds = budget.Outgoings.Select(x => x.CategoryId).ToArray();
-            var budgetIncomeCatdIds = budget.Incomes.Select(X => X.CategoryId).ToArray();
-            var outgoingCatIds = categories.Where(x => x.Type == CategoryType.Outgoing).Select(x => x.Id).ToArray();
-            var incomeCatIds = categories.Where(x => x.Type == CategoryType.Income).Select(x => x.Id).ToArray();
-
-            var missingOutgoingKeys = outgoingCatIds.Where(x => !budgetOutgoingCatIds.Contains(x)).Select(x => x);
-            var missingIncomeKeys = incomeCatIds.Where(x => !budgetIncomeCatdIds.Contains(x)).Select(x => x);
-
-            if (missingOutgoingKeys.Any())
+            var incomes = categories
+            .Where(x => x.Type == CategoryType.Income)
+            .Select(x => new Income
             {
-                var outgoings = categories
-                    .Where(x => missingOutgoingKeys.Contains(x.Id))
-                    .Select(x => new Outgoing
-                    {
-                        BudgetId = budget.Id,
-                        UserId = Token.UserId,
-                        DateAdded = DateTime.UtcNow,
-                        CategoryId = x.Id
-                    })
-                    .ToList();
+                BudgetId = budget.Id,
+                UserId = Token.UserId,
+                DateAdded = DateTime.UtcNow,
+                CategoryId = x.Id
+            })
+            .ToList();
 
-                await _uow.Outgoings.AddRangeAsync(outgoings);
-                budget.Outgoings.Concat(outgoings);
-                await _uow.CommitAsync();
-            }
+            await _uow.Outgoings.AddRangeAsync(outgoings);
+            await _uow.Incomes.AddRangeAsync(incomes);
 
-            if (missingIncomeKeys.Any())
-            {
-                var incomes = categories
-                    .Where(x => missingIncomeKeys.Contains(x.Id))
-                    .Select(x => new Income
-                    {
-                        BudgetId = budget.Id,
-                        UserId = Token.UserId,
-                        DateAdded = DateTime.UtcNow,
-                        CategoryId = x.Id
-                    })
-                    .ToList();
+            budget.Outgoings = outgoings;
+            budget.Incomes = incomes;
 
-                await _uow.Incomes.AddRangeAsync(incomes);
-                budget.Incomes.Concat(incomes);
-                await _uow.CommitAsync();
-            }
+            await _uow.Budgets.AddAsync(budget);
+            await _uow.CommitAsync();
 
             var apiBudget = _mapper.Map<Budget, ApiBudget>(budget);
-            var apiCategories = _mapper.Map<IEnumerable<Category>, IEnumerable<ApiCategory>>(categories);
-
-            apiBudget.Categories = apiCategories;
 
             return new JsonResult(apiBudget);
         }

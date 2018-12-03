@@ -34,9 +34,18 @@ class Budget extends Component {
     componentDidMount() {
         const { loading } = this.props;
         const { currentDate } = this.state;
+        const { year, month } = this.props.match.params;
 
         if (!loading) {
-            this.props.getBudget(currentDate.year(), currentDate.month() + 1);
+            if (year && month) {
+                this.setState({
+                    currentDate: moment().year(year).month(month - 1)
+                });
+
+                this.props.getBudget(year, month - 1);
+            } else {
+                this.props.getBudget(currentDate.year(), currentDate.month() + 1);
+            }
         }
     }
 
@@ -109,13 +118,27 @@ class Budget extends Component {
         return show;
     }
 
+    createBudget(e) {
+        e.preventDefault();
+        const { currentDate } = this.state;
+        this.props.addBudget(currentDate.year(), currentDate.month() + 1);
+    }
+
     renderBudget() {
-        return (
-            <div className="tile is-ancestor">
-                {this.renderIncomesAndOutgoings()}
-                {this.renderExpenses()}
-            </div>
-        )
+        if (this.props.outgoings.length === 0) {
+            return (
+                <div>
+                    <p>You have not created a budget for this month. <a href="#" onClick={(e) => this.createBudget(e)}>Create one now?</a></p>
+                </div>
+            )
+        } else {
+            return (
+                <div className="tile is-ancestor">
+                    {this.renderIncomesAndOutgoings()}
+                    {this.renderExpenses()}
+                </div>
+            )
+        }
     }
 
     handleOutgoingEdit(value, o) {

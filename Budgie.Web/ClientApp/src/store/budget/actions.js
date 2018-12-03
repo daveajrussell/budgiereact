@@ -10,10 +10,18 @@ export const actionCreators = {
             .then((budget) => {
                 dispatch({ type: types.receiveBudgetType, budget: budget });
             })
-            .catch((error) => {
-                console.log(error);
-                dispatch({ type: types.budgetFailureType });
-            });
+            .catch((error) => logAndHandleFailure(error, dispatch, types.transactionFailureType));
+    },
+
+    addBudget: (year, month) => (dispatch) => {
+        dispatch({ type: types.requestBudgetType });
+
+        budgetService
+            .addBudget(year, month)
+            .then((budget) => {
+                dispatch({ type: types.receiveBudgetType, budget: budget });
+            })
+            .catch((error) => logAndHandleFailure(error, dispatch, types.transactionFailureType));
     },
 
     addTransaction: (transaction) => (dispatch) => {
@@ -25,10 +33,7 @@ export const actionCreators = {
                 dispatch({ type: types.receiveNewTransactionType, transaction: transaction });
                 dispatch({ type: types.recalculateBudgetType });
             })
-            .catch((error) => {
-                console.log(error);
-                dispatch({ type: types.transactionFailureType });
-            });
+            .catch((error) => logAndHandleFailure(error, dispatch, types.transactionFailureType));
     },
 
     editTransaction: (transaction) => (dispatch) => {
@@ -40,10 +45,7 @@ export const actionCreators = {
                 dispatch({ type: types.receiveEditTransactionType, transaction: transaction });
                 dispatch({ type: types.recalculateBudgetType });
             })
-            .catch((error) => {
-                console.log(error);
-                dispatch({ type: types.transactionFailureType });
-            });
+            .catch((error) => logAndHandleFailure(error, dispatch, types.transactionFailureType));
     },
 
     deleteTransaction: (transaction) => (dispatch) => {
@@ -55,10 +57,7 @@ export const actionCreators = {
                 dispatch({ type: types.receiveDeleteTransactionType, transaction: transaction });
                 dispatch({ type: types.recalculateBudgetType });
             })
-            .catch((error) => {
-                console.log(error);
-                dispatch({ type: types.transactionFailureType });
-            });
+            .catch((error) => logAndHandleFailure(error, dispatch, types.transactionFailureType));
     },
 
     editOutgoing: (outgoing) => (dispatch) => {
@@ -70,9 +69,11 @@ export const actionCreators = {
                 dispatch({ type: types.receiveEditOutgoingType, outgoing: outgoing });
                 dispatch({ type: types.recalculateBudgetType });
             })
-            .catch((error) => {
-                console.log(error);
-                dispatch({ type: types.transactionFailureType });
-            })
+            .catch((error) => logAndHandleFailure(error, dispatch, types.transactionFailureType));
     }
 };
+
+function logAndHandleFailure(error, dispatch, type) {
+    console.log(error, type);
+    dispatch({ type: type });
+}

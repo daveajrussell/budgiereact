@@ -4,6 +4,7 @@ import authHeader from './../authHeader';
 
 export const budgetService = {
     getBudget,
+    addBudget,
     addTransaction,
     editTransaction,
     deleteTransaction,
@@ -13,6 +14,17 @@ export const budgetService = {
 function getBudget(year, month) {
     const requestOptions = {
         method: 'GET',
+        headers: authHeader()
+    };
+
+    return fetch(`${config.apiUrl}/api/budgets/${year}/${month}`, requestOptions)
+        .then(handleResponse, handleError)
+        .then(budget => budget);
+}
+
+function addBudget(year, month) {
+    const requestOptions = {
+        method: 'PUT',
         headers: authHeader()
     };
 
