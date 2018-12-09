@@ -10,7 +10,13 @@ export const actionCreators = {
             .then((budget) => {
                 dispatch({ type: types.receiveBudgetType, budget: budget });
             })
-            .catch((error) => logAndHandleFailure(error, dispatch, types.transactionFailureType));
+            .catch((error) => {
+                if (error.status === 404) {
+                    dispatch({ type: types.receiveBudgetNotFoundType });
+                } else {
+                    logAndHandleFailure(error, dispatch, types.transactionFailureType)
+                }
+            });
     },
 
     addBudget: (year, month) => (dispatch) => {

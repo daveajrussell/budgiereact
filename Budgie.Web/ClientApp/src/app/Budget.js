@@ -50,7 +50,7 @@ class Budget extends Component {
         if (!loading) {
             if (year && month) {
                 this.setState({
-                    currentDate: moment().year(parseInt(year)).month(month)
+                    currentDate: moment().year(parseInt(year)).month(month - 1)
                 });
 
                 this.props.getBudget(year, month);

@@ -15,12 +15,8 @@ export function handleResponse(response) {
                 history.push('/login');
                 reject();
             } else {
-                response.text().then(text => reject(text));
+                reject(response);
             }
         }
     });
-}
-
-export function handleError(error) {
-    return Promise.reject(error && error.message);
 }

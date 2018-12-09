@@ -1,5 +1,5 @@
 import { config } from '../config';
-import { handleError, handleResponse } from './../rootService';
+import { handleResponse } from './../rootService';
 import authHeader from './../authHeader';
 
 export const categoryService = {
@@ -16,7 +16,7 @@ function getAllCategories() {
     };
 
     return fetch(config.apiUrl + '/api/categories', requestOptions)
-        .then(handleResponse, handleError)
+        .then(handleResponse)
         .then(categories => categories);
 }
 
@@ -28,7 +28,7 @@ function createNewCategory(category) {
     };
 
     return fetch(config.apiUrl + '/api/categories', requestOptions)
-        .then(handleResponse, handleError)
+        .then(handleResponse)
         .then(category => category);
 }
 
@@ -39,7 +39,7 @@ function deleteCategory(category) {
     };
 
     return fetch(`${config.apiUrl}/api/categories/${category.id}`, requestOptions)
-        .then(handleResponse, handleError);
+        .then(handleResponse);
 }
 
 function editCategory(category) {
@@ -50,6 +50,6 @@ function editCategory(category) {
     };
 
     return fetch(config.apiUrl + '/api/categories/edit', requestOptions)
-        .then(handleResponse, handleError)
+        .then(handleResponse)
         .then(category => category);
 }

@@ -1,5 +1,5 @@
 import { config } from '../config';
-import { handleError, handleResponse } from './../rootService';
+import { handleResponse } from './../rootService';
 import authHeader from './../authHeader';
 
 export const dashboardService = {
@@ -13,6 +13,6 @@ function getDashboard(params) {
     };
 
     return fetch(`${config.apiUrl}/api/dashboard?range=${params.range}`, requestOptions)
-        .then(handleResponse, handleError)
+        .then(handleResponse)
         .then(dashboard => dashboard);
 }

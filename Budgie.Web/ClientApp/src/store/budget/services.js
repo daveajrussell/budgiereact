@@ -1,5 +1,5 @@
 import { config } from '../config';
-import { handleError, handleResponse } from './../rootService';
+import { handleResponse } from './../rootService';
 import authHeader from './../authHeader';
 
 export const budgetService = {
@@ -18,7 +18,7 @@ function getBudget(year, month) {
     };
 
     return fetch(`${config.apiUrl}/api/budgets/${year}/${month}`, requestOptions)
-        .then(handleResponse, handleError)
+        .then(handleResponse)
         .then(budget => budget);
 }
 
@@ -29,7 +29,7 @@ function addBudget(year, month) {
     };
 
     return fetch(`${config.apiUrl}/api/budgets/${year}/${month}`, requestOptions)
-        .then(handleResponse, handleError)
+        .then(handleResponse)
         .then(budget => budget);
 }
 
@@ -41,7 +41,7 @@ function addTransaction(transaction) {
     };
 
     return fetch(`${config.apiUrl}/api/budgets/transaction`, requestOptions)
-        .then(handleResponse, handleError)
+        .then(handleResponse)
         .then(transaction => transaction);
 }
 
@@ -53,7 +53,7 @@ function editTransaction(transaction) {
     };
 
     return fetch(`${config.apiUrl}/api/budgets/transaction/${transaction.id}`, requestOptions)
-        .then(handleResponse, handleError)
+        .then(handleResponse)
         .then(transaction => transaction);
 }
 
@@ -65,7 +65,7 @@ function deleteTransaction(transaction) {
     };
 
     return fetch(`${config.apiUrl}/api/budgets/transaction/${transaction.id}`, requestOptions)
-        .then(handleResponse, handleError)
+        .then(handleResponse)
         .then(transaction => transaction);
 }
 
@@ -77,6 +77,6 @@ function editOutgoing(outgoing) {
     };
 
     return fetch(`${config.apiUrl}/api/budgets/outgoings/${outgoing.id}`, requestOptions)
-        .then(handleResponse, handleError)
+        .then(handleResponse)
         .then(outgoing => outgoing);
 }

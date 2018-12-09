@@ -30,6 +30,8 @@ namespace Budgie.Api.Controllers
         [Route("{year:int}/{month:int}")]
         public async Task<IActionResult> GetBudget(int year, int month)
         {
+            if (month == 0) month = 1;
+
             var budget = await _uow.Budgets.GetBudget(year, month);
 
             if (budget != null)
@@ -100,6 +102,8 @@ namespace Budgie.Api.Controllers
         [Route("{year:int}/{month:int}")]
         public async Task<IActionResult> AddBudget(int year, int month)
         {
+            if (month == 0) month = 1;
+
             var categories = _uow.Categories
                 .GetAll()
                 .Where(x => x.UserId == Token.UserId)

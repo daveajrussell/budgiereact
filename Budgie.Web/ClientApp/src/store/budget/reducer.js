@@ -28,6 +28,8 @@ export default function reducer(state, action) {
             return reduceRecalculatedState(state);
         case types.transactionFailureType:
             return { ...state, loading: false }
+        case types.receiveBudgetNotFoundType:
+            return reduceEmptyBudgetState(state);
         default:
             return state;
     }
@@ -44,6 +46,21 @@ function reduceDefaultReceiveState(state, action) {
         totalBudgeted: action.budget.totalBudgeted,
         totalActuals: action.budget.totalActuals,
         totalRemaining: action.budget.totalBudgeted - action.budget.totalActuals,
+        loading: false
+    }
+}
+
+function reduceEmptyBudgetState(state) {
+    return {
+        ...state,
+        outgoings: [],
+        incomes: [],
+        transactions: [],
+        categories: [],
+        incomeVsExpenditure: 0,
+        totalBudgeted: 0,
+        totalActuals: 0,
+        totalRemaining: 0,
         loading: false
     }
 }

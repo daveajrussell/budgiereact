@@ -1,5 +1,5 @@
 import { config } from '../config';
-import { handleError, handleResponse } from './../rootService';
+import { handleResponse } from './../rootService';
 
 export const userService = {
     login,
@@ -15,7 +15,7 @@ function login(username, password) {
     };
 
     return fetch(config.apiUrl + '/api/user/authenticate', requestOptions)
-        .then(handleResponse, handleError)
+        .then(handleResponse)
         .then(user => {
             if (user && user.token) {
                 localStorage.setItem('user', JSON.stringify(user));
@@ -36,5 +36,5 @@ function register(user) {
         body: JSON.stringify(user)
     };
 
-    return fetch(config.apiUrl + '/api/user/register', requestOptions).then(handleResponse, handleError);
+    return fetch(config.apiUrl + '/api/user/register', requestOptions).then(handleResponse);
 }
