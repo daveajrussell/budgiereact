@@ -21,7 +21,8 @@ class Header extends Component {
     });
   }
 
-  toggleBurger = () => {
+  toggleBurger = (e) => {
+    e.preventDefault();
     this.setState(prevState => ({
       isExpanded: !prevState.isExpanded
     }))
@@ -40,11 +41,11 @@ class Header extends Component {
             to="/">
             <strong>budgie</strong>
           </Link>
-          <button onClick={() => this.toggleBurger()} className={burgerClass} aria-label="menu" aria-expanded={isExpanded} data-target="navbar">
+          <a href="#" onClick={(e) => this.toggleBurger(e)} className={burgerClass} aria-label="menu" aria-expanded={isExpanded} data-target="navbar">
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
-          </button>
+          </a>
         </div>
         <div id="navbar" className={navbarClass}>
           {renderAppActions(this.props)}

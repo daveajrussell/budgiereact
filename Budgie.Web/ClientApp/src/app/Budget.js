@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from 'react-router-dom';
 import { Modal, CollapsibleDiv, InlineEditor } from './components';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -32,17 +33,27 @@ class Budget extends Component {
     }
 
     componentDidMount() {
+        this.renderComponent();
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.location.pathname !== this.props.location.pathname) {
+            this.renderComponent(nextProps);
+        }
+    }
+
+    renderComponent(props) {
         const { loading } = this.props;
         const { currentDate } = this.state;
-        const { year, month } = this.props.match.params;
+        const { year, month } = props ? props.match.params : this.props.match.params;
 
         if (!loading) {
             if (year && month) {
                 this.setState({
-                    currentDate: moment().year(year).month(month - 1)
+                    currentDate: moment().year(parseInt(year)).month(month)
                 });
 
-                this.props.getBudget(year, month - 1);
+                this.props.getBudget(year, month);
             } else {
                 this.props.getBudget(currentDate.year(), currentDate.month() + 1);
             }
@@ -372,6 +383,46 @@ class Budget extends Component {
         }
     }
 
+    renderNextMonthLink() {
+        const { currentDate } = this.state;
+        let futureMonth = moment(currentDate).add(1, 'M'),
+            futureMonthEnd = futureMonth.endOf('month');
+
+        if (currentDate.date() !== futureMonth.date() && futureMonth.isSame(futureMonthEnd.format('YYYY-MM-DD'))) {
+            futureMonth = futureMonth.add(1, 'd');
+        }
+
+        // console.log(futureMonth);
+
+        return (
+            <Link
+                className="button is-small"
+                to={`/budget/${futureMonth.year()}/${futureMonth.month() + 1}`}>
+                <span>Next</span>
+            </Link>
+        )
+    }
+
+    renderPreviousMonthLink() {
+        const { currentDate } = this.state;
+        let pastMonth = moment(currentDate).subtract(1, 'M'),
+            pastMonthStart = pastMonth.startOf('month');
+
+        // if (currentDate.date() !== pastMonth.date() && pastMonth.isSame(pastMonthStart.format('YYYY-MM-DD'))) {
+        //     pastMonth = pastMonth.subtract(1, 'd');
+        // }
+
+        // console.log(pastMonth);
+
+        return (
+            <Link
+                className="button is-small"
+                to={`/budget/${pastMonth.year()}/${pastMonth.month() + 1}`}>
+                <span>Previous</span>
+            </Link>
+        )
+    }
+
     render() {
         const { loading } = this.props;
         const { currentDate, mode, category, amount, date, valid, submitted } = this.state;
@@ -393,7 +444,16 @@ class Budget extends Component {
         });
         return (
             <main>
-                <h3>Budget - {`${currentDate.format('MMMM')}/${currentDate.year()}`}</h3>
+                <h3>Budget - {`${currentDate.format('MMMM')}/${currentDate.year()}`}
+                    <div className="field is-grouped is-pulled-right">
+                        <p className="control">
+                            {this.renderPreviousMonthLink()}
+                        </p>
+                        <p className="control">
+                            {this.renderNextMonthLink()}
+                        </p>
+                    </div>
+                </h3>
                 {
                     loading ?
                         <div>Loading...</div>
